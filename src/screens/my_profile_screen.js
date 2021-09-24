@@ -22,4 +22,5 @@ const MyProfileScreen = (props)=>{
         </View>
     )
 }
+
 export default MyProfileScreen
