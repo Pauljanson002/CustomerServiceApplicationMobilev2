@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.2.7",
+    "@jrobins/bulma-native": "^0.0.4",
     "@react-native-community/masked-view": "0.1.10",
     "apollo-link-context": "^1.0.20",
     "date-fns": "^2.16.1",
@@ -17,6 +18,7 @@
     "expo-secure-store": "^9.2.0",
     "expo-status-bar": "~1.0.2",
     "graphql": "^15.4.0",
+    "native-base": "^3.2.0",
     "react": "16.13.1",
     "react-apollo": "^3.1.5",
     "react-dom": "16.13.1",
@@ -32,7 +34,8 @@
     "react-navigation-stack": "^2.10.1",
     "react-navigation-tabs": "^2.10.1",
     "styled-components": "^5.2.1",
-    "@jrobins/bulma-native": "^0.0.4"
+    "styled-system": "^5.1.5",
+    "react-native-svg": "12.1.0"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",
