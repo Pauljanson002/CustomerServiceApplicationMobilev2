@@ -24,16 +24,16 @@ const TabNavigator = createBottomTabNavigator({
     MyNoteScreen: {
         screen: MyStack,
         navigationOptions: {
-            tabBarLabel: 'My Notes',
+            tabBarLabel: 'My Profile',
             tabBarIcon: ({ tintColor }) => (
-                <MaterialCommunityIcons name="notebook" size={24} color={tintColor} />
+                <MaterialCommunityIcons name="face-profile" size={24} color={tintColor} />
             )
         }
     },
     Settings: {
         screen: ProviderStack,
         navigationOptions: {
-            tabBarLabel: 'Settings',
+            tabBarLabel: 'ServiceProviders',
             tabBarIcon: ({ tintColor }) => (
                 <MaterialCommunityIcons name="settings" size={24} color={tintColor} />
             )

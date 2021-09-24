@@ -1,9 +1,9 @@
 import React from "react";
-import {View,Button} from "react-native";
+import {View} from "react-native";
 import * as SecureStore from "expo-secure-store";
 import {useQuery} from "@apollo/client";
 import {GET_ME} from "../gql/query";
-import {Center, Container, Heading, Text, Avatar, VStack, HStack, Spacer} from "native-base";
+import {Center, Container, Heading, Text, Avatar, VStack, HStack, Spacer,Button} from "native-base";
 import Box from "native-base/src/components/primitives/Box/index";
 import Stack from "native-base/src/components/primitives/Stack/Stack";
 
@@ -60,6 +60,7 @@ const MyProfileScreen = (props)=>{
                         <Spacer/>
                         <Text>{meQuery.data.me.bio}</Text>
                     </HStack>
+                    <Button onPress={signOut}>Sign Out</Button>
                 </Stack>
             </Center>
             <Container>
