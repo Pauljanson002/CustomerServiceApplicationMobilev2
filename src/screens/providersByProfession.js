@@ -75,10 +75,12 @@ const ProvidersByProfessionScreen = ({ navigation, route }) => {
               borderRadius: 8,
               margin: 4,
             }}
+            onPress={()=>navigation.navigate('HireNow', {id:item.id})}
           >
             <Text style={{ color: 'white' }}>View Profile</Text>
           </TouchableOpacity>
           <TouchableOpacity
+            key={item.id}
             style={{
               height: 40,
               width: 90,
@@ -88,6 +90,7 @@ const ProvidersByProfessionScreen = ({ navigation, route }) => {
               borderRadius: 8,
               margin: 4,
             }}
+            onPress={()=>{navigation.navigate('HireNow', {id:item.id}); console.log(item.id)}}
           >
             <Text style={{ color: 'white' }}>Hire Now</Text>
           </TouchableOpacity>

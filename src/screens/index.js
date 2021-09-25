@@ -13,6 +13,8 @@ import ProvidersByProfession from "./providersByProfession"
 import AuthLoading from "./auth_loading";
 import SignIn from "./signin";
 import SignUp from "./signup";
+import HireNow from './hireNow';
+import HireNowScreen from './hireNow';
 
 const ProviderStack = createStackNavigator({
     Providers:ProvidersScreen
@@ -25,6 +27,7 @@ const MyStack = createStackNavigator({
 const RequesterStack = createStackNavigator({
     Requesters: RequestersScreen,
     ProvidersByProfession:ProvidersByProfession,
+    HireNow:HireNow,
 
 });
 
@@ -51,7 +54,7 @@ const TabNavigator = createBottomTabNavigator({
     Requesting: {
         screen: RequesterStack,
         navigationOptions: {
-            tabBarLabel: 'ServiceRequesting',
+            tabBarLabel: 'Request',
             tabBarIcon: ({ tintColor }) => (
                 <MaterialIcons name="design-services" size={24} color="black" />
             )
