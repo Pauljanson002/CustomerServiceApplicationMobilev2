@@ -10,6 +10,7 @@
   "dependencies": {
     "@apollo/client": "^3.2.7",
     "@jrobins/bulma-native": "^0.0.4",
+    "@react-native-community/datetimepicker": "3.5.2",
     "@react-native-community/masked-view": "0.1.10",
     "apollo-link-context": "^1.0.20",
     "date-fns": "^2.16.1",
@@ -26,6 +27,7 @@
     "react-native-fast-image": "^8.5.8",
     "react-native-gesture-handler": "~1.10.2",
     "react-native-markdown-renderer": "^3.2.8",
+    "react-native-modal-datetime-picker": "^11.0.0",
     "react-native-reanimated": "~2.2.0",
     "react-native-safe-area-context": "3.2.0",
     "react-native-screens": "~3.4.0",
