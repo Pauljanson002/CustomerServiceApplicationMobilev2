@@ -9,6 +9,7 @@ import {exp} from "react-native-reanimated";
 import MyProfileScreen from "./my_profile_screen";
 import ProvidersScreen from "./providers_screen";
 import RequestersScreen from "./requesters_screen";
+import ProvidersByProfession from "./providersByProfession"
 import AuthLoading from "./auth_loading";
 import SignIn from "./signin";
 import SignUp from "./signup";
@@ -23,6 +24,8 @@ const MyStack = createStackNavigator({
 
 const RequesterStack = createStackNavigator({
     Requesters: RequestersScreen,
+    ProvidersByProfession:ProvidersByProfession,
+
 });
 
 const TabNavigator = createBottomTabNavigator({

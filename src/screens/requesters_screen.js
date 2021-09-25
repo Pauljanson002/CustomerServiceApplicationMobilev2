@@ -40,6 +40,7 @@ const RequestersScreen = ({ navigation }) => {
   if (service_types.loading) return <Text>Loading</Text>;
 
 
+
   const Item = ({ title }) => (
     <View style={styles.item}>
       <Image source={title.image} />
@@ -73,6 +74,7 @@ const RequestersScreen = ({ navigation }) => {
         >
           {service_types.data.viewAllServiceTypes.map((type) => (
             <TouchableOpacity
+            key={type.id}
               style={{
                 paddingHorizontal: 12,
                 paddingVertical: 6,
@@ -85,6 +87,7 @@ const RequestersScreen = ({ navigation }) => {
                 textAlign: 'center',
                 
               }}
+              onPress={()=>navigation.navigate('ProvidersByProfession', {profession:type.user_type})}
              
             >
                 <Image style={{height:'30%', width:'100%' , alignContent:'space-around'}} source={{uri:`${type.image}`}} />
@@ -131,5 +134,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
   },
 });
+
+RequestersScreen.navigationOptions = {
+    title: 'Requesters'
+};
 
 export default RequestersScreen;
