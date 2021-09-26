@@ -13,6 +13,8 @@ import {
   CheckIcon,
   Select,
 } from 'native-base';
+
+import Toast from 'react-native-toast-message';
 import { ScrollView } from 'react-native-gesture-handler';
 import Loading from '../components/Loading';
 
@@ -70,7 +72,7 @@ const CREATE_NEW_SR = gql`
   }
 `;
 
-function BuildingAForm({id}) {
+function BuildingAForm({id, navigation}) {
   const [formData, setData] = useState({});
   const [values, setValues] = useState({
     createServiceRequestProviderId: id
@@ -85,13 +87,25 @@ function BuildingAForm({id}) {
   const [task, setTask] = useState();
   let [payment, setPayment] = React.useState('');
 
+  function ToastComponent() {
+    React.useEffect(() => {
+      Toast.show({
+        type: 'success',
+        text1: 'Hello',
+        text2: 'This is some something 👋'
+      });
+    }, []);
+  
+    return <View />;
+  }
+
   const { loading, error, data } = useQuery(GET_ME);
   const [
     createServiceRequest,
     { loading_mutation, error_mutation }
   ] = useMutation(CREATE_NEW_SR, {
     onCompleted: data => {
-      history.push('/');
+        return <ToastComponent/>
     }
   });
   if (loading_mutation|| loading) {
@@ -164,6 +178,7 @@ function BuildingAForm({id}) {
         }
       });
       console.log("done");
+      navigation.navigate('Success');
   };
 
   return (
@@ -270,7 +285,7 @@ const HireNowScreen = ({ navigation, route }) => {
   return (
     <NativeBaseProvider>
       <Center flex={1}>
-        <BuildingAForm id={uid} />
+        <BuildingAForm id={uid} navigation={navigation}/>
       </Center>
     </NativeBaseProvider>
   );

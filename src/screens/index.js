@@ -15,6 +15,7 @@ import SignIn from "./signin";
 import SignUp from "./signup";
 import HireNow from './hireNow';
 import HireNowScreen from './hireNow';
+import Success from './successful'
 
 const ProviderStack = createStackNavigator({
     Providers:ProvidersScreen
@@ -28,6 +29,7 @@ const RequesterStack = createStackNavigator({
     Requesters: RequestersScreen,
     ProvidersByProfession:ProvidersByProfession,
     HireNow:HireNow,
+    Success:Success
 
 });
 
