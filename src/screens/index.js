@@ -4,12 +4,20 @@ import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { createStackNavigator } from 'react-navigation-stack';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 import {exp} from "react-native-reanimated";
 import MyProfileScreen from "./my_profile_screen";
 import ProvidersScreen from "./providers_screen";
+import RequestersScreen from "./requesters_screen";
+import ProvidersByProfession from "./providersByProfession"
 import AuthLoading from "./auth_loading";
 import SignIn from "./signin";
 import SignUp from "./signup";
+import HireNow from './hireNow';
+import HireNowScreen from './hireNow';
+import Success from './successful';
+import RequesterStatus from './requester_status_screen';
+import ProviderStatus from './provider_status_screen';
 
 const ProviderStack = createStackNavigator({
     Providers:ProvidersScreen
@@ -17,6 +25,17 @@ const ProviderStack = createStackNavigator({
 
 const MyStack = createStackNavigator({
     MyProfile: MyProfileScreen,
+    ProviderStatus:ProviderStatus,
+    RequesterStatus:RequesterStatus,
+    
+});
+
+const RequesterStack = createStackNavigator({
+    Requesters: RequestersScreen,
+    ProvidersByProfession:ProvidersByProfession,
+    HireNow:HireNow,
+    Success:Success
+
 });
 
 const TabNavigator = createBottomTabNavigator({
@@ -36,6 +55,15 @@ const TabNavigator = createBottomTabNavigator({
             tabBarLabel: 'ServiceProviders',
             tabBarIcon: ({ tintColor }) => (
                 <MaterialCommunityIcons name="settings" size={24} color={tintColor} />
+            )
+        }
+    },
+    Requesting: {
+        screen: RequesterStack,
+        navigationOptions: {
+            tabBarLabel: 'Request',
+            tabBarIcon: ({ tintColor }) => (
+                <MaterialIcons name="design-services" size={24} color="black" />
             )
         }
     }
