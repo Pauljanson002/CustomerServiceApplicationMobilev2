@@ -234,7 +234,7 @@ function Requests({navigation,requests, loading,state,user}){
 
 
     return (
-        <>
+        <ScrollView>
           {requests.length !== 0 ? (
             <ScrollView>
             
@@ -481,7 +481,7 @@ function Requests({navigation,requests, loading,state,user}){
               <Text>No Requests! Check Later</Text>
             
           )}
-        </>
+        </ScrollView>
       );
     
 
@@ -499,12 +499,52 @@ const RequesterStatusScreen = ({navigation})=>{
     const reviewedRequests=requestsByMe.data.reviewedServiceRequestsbyMe;
     
    return(
+       <ScrollView>
+          
+          <View>
+          
+          <Text>Started Requests</Text>
+          <Requests requests={startedRequests} navigation={navigation} loading={requestsByMe.loading} state="Pending"
+         user="Requester"/>
+      </View>
+    <View>
+          
+    <Text>Accepted Requests</Text>
+    <Requests requests={acceptedRequests} navigation={navigation} loading={requestsByMe.loading} state="Pending"
+   user="Requester"/>
+</View>
+<View>
+          
+          <Text>Rejected Requests</Text>
+          <Requests requests={rejectedRequests} navigation={navigation} loading={requestsByMe.loading} state="Pending"
+         user="Requester"/>
+      </View>
        <View>
           
-           <Text>ProvidersScreen</Text>
+           <Text>Pending Requests</Text>
            <Requests requests={pendingRequests} navigation={navigation} loading={requestsByMe.loading} state="Pending"
           user="Requester"/>
        </View>
+       <View>
+          
+          <Text>Canceled Requests</Text>
+          <Requests requests={canceledRequests} navigation={navigation} loading={requestsByMe.loading} state="Pending"
+         user="Requester"/>
+      </View>
+      <View>
+          
+          <Text>Completed Requests</Text>
+          <Requests requests={completedRequests} navigation={navigation} loading={requestsByMe.loading} state="Pending"
+         user="Requester"/>
+      </View>
+      <View>
+          
+          <Text>Reviewed Requests</Text>
+          <Requests requests={reviewedRequests} navigation={navigation} loading={requestsByMe.loading} state="Pending"
+         user="Requester"/>
+      </View>
+     
+       </ScrollView>
    )
 }
 

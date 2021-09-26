@@ -88,6 +88,24 @@ const MyProfileScreen = (props) => {
           >
             <Text style={{ color: 'white' }}>Status of My Requests</Text>
           </TouchableOpacity>
+          <TouchableOpacity
+           
+           style={{
+             height: 40,
+             
+             justifyContent: 'center',
+             alignItems: 'center',
+             backgroundColor: 'mediumturquoise',
+             borderRadius: 8,
+             margin: 4,
+           }}
+           onPress={() => {
+             props.navigation.navigate('ProviderStatus');
+             
+           }}
+         >
+           <Text style={{ color: 'white' }}>Status of the requests for me</Text>
+         </TouchableOpacity>
           <Button onPress={signOut}>Sign Out</Button>
         </Stack>
       </Center>
