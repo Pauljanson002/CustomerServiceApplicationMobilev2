@@ -32,6 +32,7 @@
     "react-native-safe-area-context": "3.2.0",
     "react-native-screens": "~3.4.0",
     "react-native-svg": "12.1.1",
+    "react-native-swiper": "^1.6.0",
     "react-native-tab-view": "2.14.2",
     "react-native-toast-message": "^1.6.0",
     "react-navigation": "^4.4.3",
