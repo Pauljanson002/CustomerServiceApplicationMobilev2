@@ -41,7 +41,7 @@ const MyProfileScreen = (props)=>{
                         <Text>{meQuery.data.me.email}</Text>
                     </HStack>
                     <HStack alignItems={"center"} space={5} mt={5}>
-                        <Text fontWeight={"bold"}>City</Text>
+                        <Text fontWeight={"bold"} >City</Text>
                         <Spacer/>
                         <Text>{meQuery.data.me.city}</Text>
                     </HStack>
