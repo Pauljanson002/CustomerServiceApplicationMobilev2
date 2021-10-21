@@ -21,19 +21,19 @@ import Loading from '../components/Loading';
 const GET_ME = gql`
   query Query {
     me {
-        id
-        username
-        email
-        nic
-        profession
-        contactNum
-        address
-        province
-        city
-        town
-        bio
-        service_providing_status
-        roles
+      id
+      username
+      email
+      nic
+      profession
+      contactNum
+      address
+      province
+      city
+      town
+      bio
+      service_providing_status
+      roles
     }
   }
 `;
@@ -72,16 +72,16 @@ const CREATE_NEW_SR = gql`
   }
 `;
 
-function BuildingAForm({id, navigation}) {
+function BuildingAForm({ id, navigation }) {
   const [formData, setData] = useState({});
   const [values, setValues] = useState({
-    createServiceRequestProviderId: id
+    createServiceRequestProviderId: id,
   });
   const [errors, setErrors] = useState({});
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
   const [date, setDate] = useState(new Date());
-  const [time, setTime] = useState();
+  const [time, setTime] = useState('');
   const [min, setMin] = useState();
   const [max, setMax] = useState();
   const [task, setTask] = useState();
@@ -92,23 +92,21 @@ function BuildingAForm({id, navigation}) {
       Toast.show({
         type: 'success',
         text1: 'Hello',
-        text2: 'This is some something 👋'
+        text2: 'This is some something 👋',
       });
     }, []);
-  
+
     return <View />;
   }
 
   const { loading, error, data } = useQuery(GET_ME);
-  const [
-    createServiceRequest,
-    { loading_mutation, error_mutation }
-  ] = useMutation(CREATE_NEW_SR, {
-    onCompleted: data => {
-        return <ToastComponent/>
-    }
-  });
-  if (loading_mutation|| loading) {
+  const [createServiceRequest, { loading_mutation, error_mutation }] =
+    useMutation(CREATE_NEW_SR, {
+      onCompleted: (data) => {
+        return <ToastComponent />;
+      },
+    });
+  if (loading_mutation || loading) {
     return <Text>Loading..</Text>;
   }
 
@@ -156,39 +154,50 @@ function BuildingAForm({id, navigation}) {
     return true;
   };
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     setValues({
       ...values,
-      [event.target.name]: event.target.value
+      [event.target.name]: event.target.value,
     });
   };
 
   const onSubmit = () => {
     createServiceRequest({
-        variables: {
-          ...values,
-          createServiceRequestLocation:data.me.address,
-          createServiceRequestDate:date,
-          createServiceRequestTime:time,
-          createServiceRequestPayMethod:payment,
-          createServiceRequestTask:task,
-          createServiceRequestMinPrice:min,
-          createServiceRequestMaxPrice:max,
-
-        }
-      });
-      console.log("done");
-      navigation.navigate('Success');
+      variables: {
+        ...values,
+        createServiceRequestLocation: data.me.address,
+        createServiceRequestDate: date.getFullYear()+"-"+(date.getMonth()<10?'0':'')+date.getMonth()+"-"+(date.getDate()<10?'0':'')+date.getDate(),
+        createServiceRequestTime: (time.getHours()<10?'0':'')+time.getHours()+":"+(time.getMinutes()<10?'0':'')+time.getMinutes(),
+        createServiceRequestPayMethod: payment,
+        createServiceRequestTask: task,
+        createServiceRequestMinPrice: min,
+        createServiceRequestMaxPrice: max,
+      },
+    });
+    console.log('done');
+    navigation.navigate('Success');
   };
 
   return (
-    <ScrollView>
+    <ScrollView style={{ backgroundColor: 'white', width:'98%',borderWidth:1, borderColor:'#0369a1' }}>
+      <Text
+        style={{
+          color: '#525252',
+          fontSize: 20,
+          fontWeight: 'bold',
+          marginTop: 10,
+          marginBottom:14
+        }}
+      >
+       Create Service Request
+      </Text>
       <VStack width="90%" mx="3">
         <FormControl isRequired>
           <FormControl.Label _text={{ bold: true }}>
             Service Date
           </FormControl.Label>
-          <Button title="Select from Date Picker" onPress={showDatePicker} />
+          <Input disabled value={date?(date.getDate()+"-"+(date.getMonth()<10?'0':'')+date.getMonth()+"-"+date.getFullYear()):''} />
+          <Button title={"Select a Date"} onPress={showDatePicker} />
           <DateTimePickerModal
             isVisible={isDatePickerVisible}
             mode="date"
@@ -201,7 +210,10 @@ function BuildingAForm({id, navigation}) {
           <FormControl.Label _text={{ bold: true }}>
             Service Time
           </FormControl.Label>
-          <Button title="Select from Time Picker" onPress={showTimePicker} />
+
+          <Input disabled value={time!==''?((time.getHours()<10?'0':'')+time.getHours()+":"+(time.getMinutes()<10?'0':'')+time.getMinutes()):''} />
+          
+          <Button title="Select a Time" onPress={showTimePicker} />
           <DateTimePickerModal
             isVisible={isTimePickerVisible}
             mode="time"
@@ -212,41 +224,45 @@ function BuildingAForm({id, navigation}) {
         </FormControl>
 
         <FormControl disabled>
-          <FormControl.Label _text={{ bold: true }}>
+          <FormControl.Label _text={{ bold: true }} style={{marginTop:10}}>
             Service Location
           </FormControl.Label>
           <Input disabled value={data.me.address} />
         </FormControl>
 
         <FormControl isRequired isInvalid={'name' in errors}>
-          <FormControl.Label _text={{ bold: true }}>
+          <FormControl.Label _text={{ bold: true }} style={{marginTop:10}}>
             Price Range you expect to pay
           </FormControl.Label>
           <Input
             placeholder="Min Value"
             name={'createServiceRequestMinPrice'}
-            onChangeText={(value) =>{ setData({ ...formData, min: value }); setMin(value)}}
+            onChangeText={(value) => {
+              setData({ ...formData, min: value });
+              setMin(value);
+            }}
           />
         </FormControl>
         <FormControl isRequired isInvalid={'name' in errors}>
-          <FormControl.Label _text={{ bold: true }}>
-            -
-          </FormControl.Label>
+          <FormControl.Label _text={{ bold: true }}>-</FormControl.Label>
           <Input
             placeholder="Max Value"
             name={'createServiceRequestMaxPrice'}
-            onChangeText={(value) => {setData({ ...formData, max: value }); setMax(value)}}
+            onChangeText={(value) => {
+              setData({ ...formData, max: value });
+              setMax(value);
+            }}
           />
         </FormControl>
         <FormControl isRequired isInvalid={'name' in errors}>
-          <FormControl.Label _text={{ bold: true }}>
+          <FormControl.Label _text={{ bold: true }} style={{marginTop:10}}>
             Payment Method
           </FormControl.Label>
           <VStack alignItems="center" space={4}>
             <Select
-            name={'createServiceRequestPayMethod'}
+              name={'createServiceRequestPayMethod'}
               selectedValue={payment}
-              minWidth="200"
+              minWidth="340"
               accessibilityLabel="Choose Payment Method"
               placeholder="Choose Payment Method"
               _selectedItem={{
@@ -262,13 +278,16 @@ function BuildingAForm({id, navigation}) {
           </VStack>
         </FormControl>
         <FormControl isRequired isInvalid={'name' in errors}>
-          <FormControl.Label _text={{ bold: true }}>
+          <FormControl.Label _text={{ bold: true }} style={{marginTop:10}}>
             Job Description
           </FormControl.Label>
           <TextArea
             placeholder="Explain what you need to get done"
             name={'createServiceRequestTask'}
-            onChangeText={(value) => {setData({ ...formData, max: value }); setTask(value)}}
+            onChangeText={(value) => {
+              setData({ ...formData, max: value });
+              setTask(value);
+            }}
           />
         </FormControl>
         <Button2 onPress={onSubmit} mt="5" colorScheme="cyan">
@@ -280,12 +299,11 @@ function BuildingAForm({id, navigation}) {
 }
 const HireNowScreen = ({ navigation, route }) => {
   const uid = navigation.getParam('id');
- 
- 
+
   return (
     <NativeBaseProvider>
       <Center flex={1}>
-        <BuildingAForm id={uid} navigation={navigation}/>
+        <BuildingAForm id={uid} navigation={navigation} />
       </Center>
     </NativeBaseProvider>
   );

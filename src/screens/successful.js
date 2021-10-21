@@ -8,11 +8,11 @@ const SuccessfulScreen = ()=>{
     
    return(
     <View style={styles.container}>
-           <AntDesign name="checkcircle" size={35} color="green" />
-           <Text style={{ fontSize: 30, fontWeight: 'bold', textAlign: 'center' }}>
+           <AntDesign name="checkcircle" size={35} color="#4ade80" />
+           <Text style={{ fontSize: 30, fontWeight: 'bold', textAlign: 'center', margin:20 }}>
         Succesful!
       </Text>
-      <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center' ,color: 'lightblue'}}>
+      <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center' ,color: '#60a5fa', margin:5}}>
          You can check the status of the request on your profile
       </Text>
        </View>
@@ -29,15 +29,8 @@ const styles = StyleSheet.create({
       backgroundColor: 'white',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: 15,
-      margin: 10,
-      shadowColor: '#000',
-      shadowOffset: {
-        width: 0,
-        height: 12,
-      },
-      shadowOpacity: 0.58,
-      shadowRadius: 16.0,
+ 
+
   
       elevation: 24,
     },
