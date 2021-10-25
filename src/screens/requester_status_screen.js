@@ -863,7 +863,7 @@ const RequestersStatusScreen = () => {
                           <Text style={{ color: 'white' }}>View Request</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
-                          key={request.id}
+                          key={request.id+1}
                           style={{
                             height: 40,
                             width: '43%',
