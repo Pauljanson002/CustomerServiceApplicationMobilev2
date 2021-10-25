@@ -10,6 +10,7 @@ import {
   ScrollView,
   RefreshControl,
 } from 'react-native';
+import { useToast } from "react-native-toast-notifications";
 import { Icon } from 'react-native-elements';
 import { NetworkStatus } from '@apollo/client';
 import { Select, VStack, CheckIcon, HStack, Checkbox, Text } from 'native-base';
@@ -194,31 +195,19 @@ const ProvidersStatusScreen = () => {
   const [reject, setReject] = React.useState('Reject');
   const [start, setStart] = React.useState('Start');
   const [complete, setComplete] = React.useState('Complete');
-  const [cancelServiceRequest, { loading_cancel, error_cancel }] = useMutation(
-    CANCEL_SR,
-    {
-      onCompleted: (data) => {
-        addToast('Successfully canceled request', { appearance: 'success' });
-        setCancel('Canceled');
-        history.push(`/profile/serviceRequestsSent`);
-      },
-      onError: (error) => {
-        console.log(error);
-        addToast('Failed ', { appearance: 'error' });
-      },
-    }
-  );
+  const toast = useToast();
+
 
   const [rejectServiceRequest, { loading_reject, error_reject }] = useMutation(
     REJECT_SR,
     {
       onCompleted: (data) => {
-        addToast('Successfully rejected request', { appearance: 'success' });
-        setCancel('Rejected');
-        history.push(`/profile/serviceRequestsForMe`);
+        toast.show('Successfully rejected request', { type: 'success',animationType: "slide-in" });
+        setReject('Rejected');
+        refetch();
       },
       onError: (error) => {
-        addToast('Failed ', { appearance: 'error' });
+        toast.show('Failed ', {  type: 'danger' ,animationType: "slide-in"});
       },
     }
   );
@@ -227,15 +216,15 @@ const ProvidersStatusScreen = () => {
     START_SR,
     {
       onCompleted: (data) => {
-        addToast('Successfully started the request', {
-          appearance: 'success',
+        toast.show('Successfully started the request', {
+          type: 'success',animationType: "slide-in"
         });
 
-        history.push(`/profile/serviceRequestsForMe`);
+        refetch();
       },
       onError: (error) => {
         console.log(error);
-        addToast('Failed ', { appearance: 'error' });
+        toast.show('Failed ', {  type: 'danger' ,animationType: "slide-in" });
       },
     }
   );
@@ -243,15 +232,15 @@ const ProvidersStatusScreen = () => {
   const [completeServiceRequest, { loading_complete, error_complete }] =
     useMutation(COMPLETE_SR, {
       onCompleted: (data) => {
-        addToast('Successfully completed the request', {
-          appearance: 'success',
+        toast.show('Successfully completed the request', {
+          type: 'success',animationType: "slide-in"
         });
 
-        history.push(`/profile/serviceRequestsForMe`);
+        refetch();
       },
       onError: (error) => {
         console.log(error);
-        addToast('Failed ', { appearance: 'error' });
+        toast.show('Failed ', {  type: 'danger' ,animationType: "slide-in" });
       },
     });
   const [view, setView] = React.useState('Pending');
@@ -260,7 +249,7 @@ const ProvidersStatusScreen = () => {
   if (
     loading ||
     loading_reject ||
-    loading_cancel ||
+   
     loading_start ||
     loading_complete
   )
@@ -399,9 +388,12 @@ const ProvidersStatusScreen = () => {
                             borderRadius: 8,
                             margin: 4,
                           }}
-                          onPress={() => {
-                            navigation.navigate('HireNow', { id: request.id });
-                            console.log(request.id);
+                          onPress={(event) => {
+                            rejectServiceRequest({
+                              variables:{
+                                rejectServiceRequestId: request.id
+                              }
+                            });
                           }}
                         >
                           <Text style={{ color: 'white' }}>Reject</Text>
@@ -651,9 +643,12 @@ const ProvidersStatusScreen = () => {
                             borderRadius: 8,
                             margin: 4,
                           }}
-                          onPress={() => {
-                            navigation.navigate('HireNow', { id: request.id });
-                            console.log(request.id);
+                          onPress={(event) => {
+                            rejectServiceRequest({
+                              variables:{
+                                rejectServiceRequestId: request.id
+                              }
+                            });
                           }}
                         >
                           <Text style={{ color: 'white' }}>Reject</Text>
