@@ -8,100 +8,103 @@ import {
   Animated,
   Pressable,
   ScrollView,
+  RefreshControl,
 } from 'react-native';
+import { Icon } from 'react-native-elements';
 import { TabView, SceneMap } from 'react-native-tab-view';
-import { NativeBaseProvider, Box, Text, Center } from 'native-base';
+import { NetworkStatus } from '@apollo/client';
+import { Select, VStack, CheckIcon, HStack, Checkbox, Text } from 'native-base';
 import Constants from 'expo-constants';
 import { useMutation, useQuery, gql } from '@apollo/client';
+import { Rating } from 'react-native-ratings';
 
-const GET_SERVICE_REQUESTS_OF_ME=gql`
-query Query {
-  acceptedServiceRequestsbyMe {
-    id
-    requester_id
-    provider_id
-    date
-    time
-    task
-    min_price
-    max_price
-    location
+const GET_SERVICE_REQUESTS_OF_ME = gql`
+  query Query {
+    acceptedServiceRequestsbyMe {
+      id
+      requester_id
+      provider_id
+      date
+      time
+      task
+      min_price
+      max_price
+      location
+    }
+    startedServiceRequestsbyMe {
+      id
+      requester_id
+      provider_id
+      time
+      date
+      min_price
+      max_price
+      payMethod
+      task
+      location
+    }
+    completedServiceRequestsbyMe {
+      id
+      requester_id
+      provider_id
+      date
+      time
+      task
+      min_price
+      max_price
+      location
+    }
+    pendingServiceRequestsbyMe {
+      id
+      requester_id
+      provider_id
+      date
+      time
+      payMethod
+      task
+      min_price
+      max_price
+      location
+    }
+    canceledServiceRequestsbyMe {
+      id
+      requester_id
+      provider_id
+      time
+      date
+      payMethod
+      task
+      min_price
+      max_price
+      location
+    }
+    rejectedServiceRequestsbyMe {
+      id
+      requester_id
+      provider_id
+      date
+      time
+      payMethod
+      task
+      min_price
+      max_price
+      location
+    }
+    reviewedServiceRequestsbyMe {
+      id
+      date
+      time
+      payMethod
+      task
+      min_price
+      max_price
+      provider_id
+      requester_id
+      location
+      requestReview
+      requestRating
+    }
   }
-  startedServiceRequestsbyMe {
-    id
-    requester_id
-    provider_id
-    time
-    date
-    min_price
-    max_price
-    payMethod
-    task
-    location
-  }
-  completedServiceRequestsbyMe {
-    id
-    requester_id
-    provider_id
-    date
-    time
-    task
-    min_price
-    max_price
-    location
-  }
-  pendingServiceRequestsbyMe {
-    id
-    requester_id
-    provider_id
-    date
-    time
-    payMethod
-    task
-    min_price
-    max_price
-    location
-  }
-  canceledServiceRequestsbyMe {
-    id
-    requester_id
-    provider_id
-    time
-    date
-    payMethod
-    task
-    min_price
-    max_price
-    location
-  }
-  rejectedServiceRequestsbyMe {
-    id
-    requester_id
-    provider_id
-    date
-    time
-    payMethod
-    task
-    min_price
-    max_price
-    location
-  
-}
-reviewedServiceRequestsbyMe {
-    id
-    date
-    time
-    payMethod
-    task
-    min_price
-    max_price
-    provider_id
-    requester_id
-    location
-    requestReview
-    requestRating
-  }
-}
 `;
 
 const CANCEL_SR = gql`
@@ -171,9 +174,22 @@ const ACCEPT_SR = gql`
     }
   }
 `;
+const wait = (timeout) => {
+  return new Promise((resolve) => setTimeout(resolve, timeout));
+};
 
 const RequestersStatusScreen = () => {
-  const requestsByMe = useQuery(GET_SERVICE_REQUESTS_OF_ME);
+  const { data, loading, error, refetch, networkStatus } = useQuery(
+    GET_SERVICE_REQUESTS_OF_ME,
+    { fetchPolicy: 'no-cache', notifyOnNetworkStatusChange: true }
+  );
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    refetch();
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
   const [cancel, setCancel] = React.useState('Cancel');
   const [reject, setReject] = React.useState('Reject');
   const [start, setStart] = React.useState('Start');
@@ -239,9 +255,9 @@ const RequestersStatusScreen = () => {
       },
     });
   const [view, setView] = React.useState('Pending');
-
+  if (networkStatus === NetworkStatus.refetch) return <Text>Refetching!</Text>;
   if (
-    requestsByMe.loading ||
+    loading ||
     loading_reject ||
     loading_cancel ||
     loading_start ||
@@ -249,13 +265,13 @@ const RequestersStatusScreen = () => {
   )
     return <Text>Loading..</Text>;
 
-    const acceptedRequests=requestsByMe.data.acceptedServiceRequestsbyMe;
-    const pendingRequests=requestsByMe.data.pendingServiceRequestsbyMe;
-    const startedRequests=requestsByMe.data.startedServiceRequestsbyMe;
-    const completedRequests=requestsByMe.data.completedServiceRequestsbyMe;
-    const canceledRequests=requestsByMe.data.canceledServiceRequestsbyMe;
-    const rejectedRequests=requestsByMe.data.rejectedServiceRequestsbyMe;
-    const reviewedRequests=requestsByMe.data.reviewedServiceRequestsbyMe;
+  const acceptedRequests = data.acceptedServiceRequestsbyMe;
+  const pendingRequests = data.pendingServiceRequestsbyMe;
+  const startedRequests = data.startedServiceRequestsbyMe;
+  const completedRequests = data.completedServiceRequestsbyMe;
+  const canceledRequests = data.canceledServiceRequestsbyMe;
+  const rejectedRequests = data.rejectedServiceRequestsbyMe;
+  const reviewedRequests = data.reviewedServiceRequestsbyMe;
 
   return (
     <>
@@ -264,213 +280,147 @@ const RequestersStatusScreen = () => {
           flexDirection: 'row',
           flexWrap: 'wrap',
           alignContent: 'center',
+          backgroundColor: 'white',
         }}
       >
-        <TouchableOpacity
-          key={1}
-          style={{
-            height: 40,
-            width: '40%',
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'dodgerblue',
-            borderRadius: 8,
-            margin: 4,
+        <Select
+          selectedValue={view}
+          minWidth="190"
+          minHeight="50"
+          accessibilityLabel="Sort"
+          placeholder="View Requests of.."
+          padding={4}
+          _selectedItem={{
+            bg: '#bae6fd',
+            endIcon: <CheckIcon size="5" />,
           }}
-          onPress={() => {
-            setView('Pending');
-          }}
-        >
-          <Text style={{ color: 'white' }}>Pending</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          key={2}
-          style={{
-            height: 40,
-            width: '40%',
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'dodgerblue',
-            borderRadius: 8,
-            margin: 4,
-          }}
-          onPress={() => {
-            setView('Accepted');
+          mt={4}
+          onValueChange={(itemValue) => {
+            setView(itemValue);
+            refetch();
           }}
         >
-          <Text style={{ color: 'white' }}>Accepted</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          key={3}
-          style={{
-            height: 40,
-            width: '40%',
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'dodgerblue',
-            borderRadius: 8,
-            margin: 4,
-          }}
-          onPress={() => {
-            setView('Started');
-          }}
-        >
-          <Text style={{ color: 'white' }}>Started</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          key={4}
-          style={{
-            height: 40,
-            width: '40%',
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'dodgerblue',
-            borderRadius: 8,
-            margin: 4,
-          }}
-          onPress={() => {
-            setView('Completed');
-          }}
-        >
-          <Text style={{ color: 'white' }}>Completed</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          key={5}
-          style={{
-            height: 40,
-            width: '40%',
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'dodgerblue',
-            borderRadius: 8,
-            margin: 4,
-          }}
-          onPress={() => {
-            setView('Reviewed');
-          }}
-        >
-          <Text style={{ color: 'white' }}>Reviewed</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          key={5}
-          style={{
-            height: 40,
-            width: '40%',
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'dodgerblue',
-            borderRadius: 8,
-            margin: 4,
-          }}
-          onPress={() => {
-            setView('Rejected');
-          }}
-        >
-          <Text style={{ color: 'white' }}>Rejected</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          key={5}
-          style={{
-            height: 40,
-            width: '40%',
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'dodgerblue',
-            borderRadius: 8,
-            margin: 4,
-          }}
-          onPress={() => {
-            setView('Canceled');
-          }}
-        >
-          <Text style={{ color: 'white' }}>Canceled</Text>
-        </TouchableOpacity>
+          <Select.Item label="Pending Requests" value="Pending" />
+          <Select.Item label="Accepted Requests" value="Accepted" />
+          <Select.Item label="Started Requests" value="Started" />
+          <Select.Item label="Completed Requests" value="Completed" />
+          <Select.Item label="Reviewed Requests" value="Reviewed" />
+          <Select.Item label="Canceled Requests" value="Canceled" />
+          <Select.Item label="Rejected Requests" value="Rejected" />
+        </Select>
       </View>
 
       {view === 'Pending' ? (
         <>
-          <ScrollView>
+          <ScrollView
+            style={{ backgroundColor: 'white' }}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+          >
             {pendingRequests.length !== 0 ? (
               <ScrollView>
-                <Text
-                  style={{
-                    fontSize: 20,
-                    fontWeight: 'bold',
-                    textAlign: 'center',
-                    padding: 20,
-                  }}
-                >
-                  Pending Requests by you
-                </Text>
                 {pendingRequests.map((request, index) => (
                   <View style={styles.container}>
-                    <View style={{ alignItems: 'center', flex: 1 }}>
+                    <View style={{ alignItems: 'felx-start', flex: 1 }}>
                       <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
                         {request.task}
                       </Text>
-                      <Text style={{ fontWeight: 'bold', fontSize: 16 }}>
-                        Date - {request.date}
+                      <Text
+                        style={{ margin: 6, fontSize: 16, color: '#525252' }}
+                      >
+                        <Icon
+                          name="calendar"
+                          type="material-community"
+                          color="#517fa4"
+                        />
+                        {request.date}
                       </Text>
 
-                      <Text>Time - {request.time} H</Text>
-
-                      <TouchableOpacity
-                        key={request.id}
+                      <Text
+                        style={{ margin: 6, fontSize: 16, color: '#525252' }}
+                      >
+                        <Icon
+                          name="clock-time-eight"
+                          type="material-community"
+                          color="#517fa4"
+                        />
+                        {request.time} H
+                      </Text>
+                      <Text
+                        style={{ margin: 6, fontSize: 16, color: '#525252' }}
+                      >
+                        <Icon
+                          name="google-maps"
+                          type="material-community"
+                          color="#517fa4"
+                        />
+                        {request.location}
+                      </Text>
+                      <View
                         style={{
-                          height: 40,
-                          width: '80%',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          backgroundColor: 'mediumturquoise',
-                          borderRadius: 8,
-                          margin: 4,
-                          padding: 8,
-                        }}
-                        onPress={() => {
-                          navigation.navigate('HireNow', { id: request.id });
-                          console.log(request.id);
+                          flexDirection: 'row',
+                          flexWrap: 'wrap',
                         }}
                       >
-                        <Text style={{ color: 'white' }}>View Request</Text>
-                      </TouchableOpacity>
+                        <TouchableOpacity
+                          key={request.id}
+                          style={{
+                            height: 40,
+                            width: '43%',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: '#06b6d4',
+                            borderRadius: 8,
+                            margin: 4,
+                            padding: 8,
+                          }}
+                          onPress={() => {
+                            navigation.navigate('HireNow', { id: request.id });
+                            console.log(request.id);
+                          }}
+                        >
+                          <Text style={{ color: 'white' }}>View Request</Text>
+                        </TouchableOpacity>
 
-                      <TouchableOpacity
-                        key={request.id}
-                        style={{
-                          height: 40,
-                          width: 90,
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          backgroundColor: 'red',
-                          borderRadius: 8,
-                          margin: 4,
-                        }}
-                        onPress={() => {
-                          navigation.navigate('HireNow', { id: request.id });
-                          console.log(request.id);
-                        }}
-                      >
-                        <Text style={{ color: 'white' }}>Cancel</Text>
-                      </TouchableOpacity>
+                        <TouchableOpacity
+                          key={request.id + 1}
+                          style={{
+                            height: 40,
+                            width: '43%',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: '#f43f5e',
+                            borderRadius: 8,
+                            margin: 4,
+                          }}
+                          onPress={() => {
+                            navigation.navigate('HireNow', { id: request.id });
+                            console.log(request.id);
+                          }}
+                        >
+                          <Text style={{ color: 'white' }}>Cancel</Text>
+                        </TouchableOpacity>
+                      </View>
                     </View>
                   </View>
                 ))}
               </ScrollView>
             ) : (
               <>
-               <Text
+                <Text
                   style={{
                     fontSize: 20,
                     fontWeight: 'bold',
                     textAlign: 'center',
                     padding: 20,
+
+                    margin: 20,
                   }}
                 >
-                  No Pending Requests by you -_-
+                  No Pending Requests by you. Check if it's Accepted or
+                  Rejected!
                 </Text>
-              
               </>
             )}
           </ScrollView>
@@ -481,56 +431,84 @@ const RequestersStatusScreen = () => {
 
       {view === 'Canceled' ? (
         <>
-          <ScrollView>
+          <ScrollView
+            style={{ backgroundColor: 'white' }}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+          >
             {canceledRequests.length !== 0 ? (
               <ScrollView>
-                   <Text
-                  style={{
-                    fontSize: 20,
-                    fontWeight: 'bold',
-                    textAlign: 'center',
-                    padding: 20,
-                  }}
-                >
-                  Canceled Requests 
-                </Text>
                 {canceledRequests.map((request, index) => (
                   <View style={styles.container}>
-                    <View style={{ alignItems: 'center', flex: 1 }}>
+                    <View style={{ alignItems: 'felx-start', flex: 1 }}>
                       <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
                         {request.task}
                       </Text>
-                      <Text style={{ fontWeight: 'bold', fontSize: 16 }}>
-                        Date - {request.date}
+                      <Text
+                        style={{ margin: 6, fontSize: 16, color: '#525252' }}
+                      >
+                        <Icon
+                          name="calendar"
+                          type="material-community"
+                          color="#517fa4"
+                        />
+                        {request.date}
                       </Text>
 
-                      <Text>Time - {request.time} H</Text>
-
-                      <TouchableOpacity
-                        key={request.id}
+                      <Text
+                        style={{ margin: 6, fontSize: 16, color: '#525252' }}
+                      >
+                        <Icon
+                          name="clock-time-eight"
+                          type="material-community"
+                          color="#517fa4"
+                        />
+                        {request.time} H
+                      </Text>
+                      <Text
+                        style={{ margin: 6, fontSize: 16, color: '#525252' }}
+                      >
+                        <Icon
+                          name="google-maps"
+                          type="material-community"
+                          color="#517fa4"
+                        />
+                        {request.location}
+                      </Text>
+                      <View
                         style={{
-                          height: 40,
-                          width: 90,
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          backgroundColor: 'mediumturquoise',
-                          borderRadius: 8,
-                          margin: 4,
-                        }}
-                        onPress={() => {
-                          navigation.navigate('HireNow', { id: request.id });
-                          console.log(request.id);
+                          flexDirection: 'row',
+                          flexWrap: 'wrap',
                         }}
                       >
-                        <Text style={{ color: 'white' }}>View</Text>
-                      </TouchableOpacity>
+                        <TouchableOpacity
+                          key={request.id}
+                          style={{
+                            height: 40,
+                            width: '96%',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: '#06b6d4',
+                            borderRadius: 8,
+                            margin: 4,
+                            padding: 8,
+                          }}
+                          onPress={() => {
+                            navigation.navigate('HireNow', { id: request.id });
+                            console.log(request.id);
+                          }}
+                        >
+                          <Text style={{ color: 'white' }}>View Request</Text>
+                        </TouchableOpacity>
+                      </View>
                     </View>
                   </View>
                 ))}
               </ScrollView>
             ) : (
               <>
-               <Text
+                <Text
                   style={{
                     fontSize: 20,
                     fontWeight: 'bold',
@@ -540,7 +518,6 @@ const RequestersStatusScreen = () => {
                 >
                   No Canceled Requests by you -_-
                 </Text>
-              
               </>
             )}
           </ScrollView>
@@ -551,10 +528,15 @@ const RequestersStatusScreen = () => {
 
       {view === 'Accepted' ? (
         <>
-          <ScrollView>
+          <ScrollView
+            style={{ backgroundColor: 'white' }}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+          >
             {acceptedRequests.length !== 0 ? (
               <ScrollView>
-                   <Text
+                <Text
                   style={{
                     fontSize: 20,
                     fontWeight: 'bold',
@@ -566,68 +548,103 @@ const RequestersStatusScreen = () => {
                 </Text>
                 {acceptedRequests.map((request, index) => (
                   <View style={styles.container}>
-                    <View style={{ alignItems: 'center', flex: 1 }}>
+                    <View style={{ alignItems: 'felx-start', flex: 1 }}>
                       <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
                         {request.task}
                       </Text>
-                      <Text style={{ fontWeight: 'bold', fontSize: 16 }}>
-                        Date - {request.date}
+                      <Text
+                        style={{ margin: 6, fontSize: 16, color: '#525252' }}
+                      >
+                        <Icon
+                          name="calendar"
+                          type="material-community"
+                          color="#517fa4"
+                        />
+                        {request.date}
                       </Text>
 
-                      <Text>Time - {request.time} H</Text>
-
-                      <TouchableOpacity
-                        key={request.id}
+                      <Text
+                        style={{ margin: 6, fontSize: 16, color: '#525252' }}
+                      >
+                        <Icon
+                          name="clock-time-eight"
+                          type="material-community"
+                          color="#517fa4"
+                        />
+                        {request.time} H
+                      </Text>
+                      <Text
+                        style={{ margin: 6, fontSize: 16, color: '#525252' }}
+                      >
+                        <Icon
+                          name="google-maps"
+                          type="material-community"
+                          color="#517fa4"
+                        />
+                        {request.location}
+                      </Text>
+                      <View
                         style={{
-                          height: 40,
-                          width: 90,
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          backgroundColor: 'mediumturquoise',
-                          borderRadius: 8,
-                          margin: 4,
-                        }}
-                        onPress={() => {
-                          navigation.navigate('HireNow', { id: request.id });
-                          console.log(request.id);
+                          flexDirection: 'row',
+                          flexWrap: 'wrap',
                         }}
                       >
-                        <Text style={{ color: 'white' }}>View</Text>
-                      </TouchableOpacity>
+                        <TouchableOpacity
+                          key={request.id}
+                          style={{
+                            height: 40,
+                            width: '43%',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: '#06b6d4',
+                            borderRadius: 8,
+                            margin: 4,
+                            padding: 8,
+                          }}
+                          onPress={() => {
+                            navigation.navigate('HireNow', { id: request.id });
+                            console.log(request.id);
+                          }}
+                        >
+                          <Text style={{ color: 'white' }}>View Request</Text>
+                        </TouchableOpacity>
 
-                      <TouchableOpacity
-                        key={request.id}
-                        style={{
-                          height: 40,
-                          width: 90,
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          backgroundColor: 'red',
-                          borderRadius: 8,
-                          margin: 4,
-                        }}
-                        onPress={() => {
-                          navigation.navigate('HireNow', { id: request.id });
-                          console.log(request.id);
-                        }}
-                      >
-                        <Text style={{ color: 'white' }}>Cancel</Text>
-                      </TouchableOpacity>
+                        <TouchableOpacity
+                          key={request.id + 1}
+                          style={{
+                            height: 40,
+                            width: '43%',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: '#f43f5e',
+                            borderRadius: 8,
+                            margin: 4,
+                          }}
+                          onPress={() => {
+                            navigation.navigate('HireNow', { id: request.id });
+                            console.log(request.id);
+                          }}
+                        >
+                          <Text style={{ color: 'white' }}>Cancel</Text>
+                        </TouchableOpacity>
+                      </View>
                     </View>
                   </View>
                 ))}
               </ScrollView>
             ) : (
               <>
-              <Text
+                <Text
                   style={{
                     fontSize: 20,
                     fontWeight: 'bold',
                     textAlign: 'center',
                     padding: 20,
+
+                    margin: 20,
                   }}
                 >
-                  No Accepted Requests  -_-
+                  No Accepted Requests. Check if it's still Pending or Rejected!
                 </Text>
               </>
             )}
@@ -639,10 +656,15 @@ const RequestersStatusScreen = () => {
 
       {view === 'Started' ? (
         <>
-          <ScrollView>
+          <ScrollView
+            style={{ backgroundColor: 'white' }}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+          >
             {startedRequests.length !== 0 ? (
               <ScrollView>
-                   <Text
+                <Text
                   style={{
                     fontSize: 20,
                     fontWeight: 'bold',
@@ -654,63 +676,93 @@ const RequestersStatusScreen = () => {
                 </Text>
                 {startedRequests.map((request, index) => (
                   <View style={styles.container}>
-                    <View style={{ alignItems: 'center', flex: 1 }}>
+                    <View style={{ alignItems: 'felx-start', flex: 1 }}>
                       <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
                         {request.task}
                       </Text>
-                      <Text style={{ fontWeight: 'bold', fontSize: 16 }}>
-                        Date - {request.date}
+                      <Text
+                        style={{ margin: 6, fontSize: 16, color: '#525252' }}
+                      >
+                        <Icon
+                          name="calendar"
+                          type="material-community"
+                          color="#517fa4"
+                        />
+                        {request.date}
                       </Text>
 
-                      <Text>Time - {request.time} H</Text>
-
-                      <TouchableOpacity
-                        key={request.id}
+                      <Text
+                        style={{ margin: 6, fontSize: 16, color: '#525252' }}
+                      >
+                        <Icon
+                          name="clock-time-eight"
+                          type="material-community"
+                          color="#517fa4"
+                        />
+                        {request.time} H
+                      </Text>
+                      <Text
+                        style={{ margin: 6, fontSize: 16, color: '#525252' }}
+                      >
+                        <Icon
+                          name="google-maps"
+                          type="material-community"
+                          color="#517fa4"
+                        />
+                        {request.location}
+                      </Text>
+                      <View
                         style={{
-                          height: 40,
-                          width: 90,
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          backgroundColor: 'mediumturquoise',
-                          borderRadius: 8,
-                          margin: 4,
-                        }}
-                        onPress={() => {
-                          navigation.navigate('HireNow', { id: request.id });
-                          console.log(request.id);
+                          flexDirection: 'row',
+                          flexWrap: 'wrap',
                         }}
                       >
-                        <Text style={{ color: 'white' }}>View</Text>
-                      </TouchableOpacity>
+                        <TouchableOpacity
+                          key={request.id}
+                          style={{
+                            height: 40,
+                            width: '43%',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: '#06b6d4',
+                            borderRadius: 8,
+                            margin: 4,
+                            padding: 8,
+                          }}
+                          onPress={() => {
+                            navigation.navigate('HireNow', { id: request.id });
+                            console.log(request.id);
+                          }}
+                        >
+                          <Text style={{ color: 'white' }}>View Request</Text>
+                        </TouchableOpacity>
 
-                      <TouchableOpacity
-                        key={request.id}
-                        style={{
-                          height: 40,
-                          width: '60%',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          backgroundColor: 'mediumseagreen',
-                          borderRadius: 8,
-                          margin: 4,
-                          padding: 4,
-                          
-                        }}
-                        onPress={() => {
-                          navigation.navigate('HireNow', { id: request.id });
-                          console.log(request.id);
-                        }}
-                        disabled={true}
-                      >
-                        <Text style={{ color: 'white' }}>Mark Completed</Text>
-                      </TouchableOpacity>
+                        <TouchableOpacity
+                          key={request.id + 1}
+                          style={{
+                            height: 40,
+                            width: '43%',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: '#059669',
+                            borderRadius: 8,
+                            margin: 4,
+                          }}
+                          onPress={() => {
+                            navigation.navigate('HireNow', { id: request.id });
+                            console.log(request.id);
+                          }}
+                        >
+                          <Text style={{ color: 'white' }}>Mark Completed</Text>
+                        </TouchableOpacity>
+                      </View>
                     </View>
                   </View>
                 ))}
               </ScrollView>
             ) : (
               <>
-               <Text
+                <Text
                   style={{
                     fontSize: 20,
                     fontWeight: 'bold',
@@ -718,7 +770,7 @@ const RequestersStatusScreen = () => {
                     padding: 20,
                   }}
                 >
-                  No Ongoing services -_-
+                  No Ongoing services!
                 </Text>
               </>
             )}
@@ -730,10 +782,15 @@ const RequestersStatusScreen = () => {
 
       {view === 'Completed' ? (
         <>
-          <ScrollView>
+          <ScrollView
+            style={{ backgroundColor: 'white' }}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+          >
             {completedRequests.length !== 0 ? (
               <ScrollView>
-                   <Text
+                <Text
                   style={{
                     fontSize: 20,
                     fontWeight: 'bold',
@@ -745,65 +802,122 @@ const RequestersStatusScreen = () => {
                 </Text>
                 {completedRequests.map((request, index) => (
                   <View style={styles.container}>
-                    <View style={{ alignItems: 'center', flex: 1 }}>
+                    <View style={{ alignItems: 'felx-start', flex: 1 }}>
                       <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
                         {request.task}
                       </Text>
-                      <Text style={{ fontWeight: 'bold', fontSize: 16 }}>
-                        Date - {request.date}
+                      <Text
+                        style={{ margin: 6, fontSize: 16, color: '#525252' }}
+                      >
+                        <Icon
+                          name="calendar"
+                          type="material-community"
+                          color="#517fa4"
+                        />
+                        {request.date}
                       </Text>
 
-                      <Text>Time - {request.time} H</Text>
-
-                      <TouchableOpacity
-                        key={request.id}
+                      <Text
+                        style={{ margin: 6, fontSize: 16, color: '#525252' }}
+                      >
+                        <Icon
+                          name="clock-time-eight"
+                          type="material-community"
+                          color="#517fa4"
+                        />
+                        {request.time} H
+                      </Text>
+                      <Text
+                        style={{ margin: 6, fontSize: 16, color: '#525252' }}
+                      >
+                        <Icon
+                          name="google-maps"
+                          type="material-community"
+                          color="#517fa4"
+                        />
+                        {request.location}
+                      </Text>
+                      <View
                         style={{
-                          height: 40,
-                          width: 90,
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          backgroundColor: 'mediumturquoise',
-                          borderRadius: 8,
-                          margin: 4,
-                        }}
-                        onPress={() => {
-                          navigation.navigate('HireNow', { id: request.id });
-                          console.log(request.id);
+                          flexDirection: 'row',
+                          flexWrap: 'wrap',
                         }}
                       >
-                        <Text style={{ color: 'white' }}>View</Text>
-                      </TouchableOpacity>
+                        <TouchableOpacity
+                          key={request.id}
+                          style={{
+                            height: 40,
+                            width: '43%',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: '#06b6d4',
+                            borderRadius: 8,
+                            margin: 4,
+                            padding: 8,
+                          }}
+                          onPress={() => {
+                            navigation.navigate('HireNow', { id: request.id });
+                            console.log(request.id);
+                          }}
+                        >
+                          <Text style={{ color: 'white' }}>View Request</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          key={request.id}
+                          style={{
+                            height: 40,
+                            width: '43%',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: '#fcd34d',
+                            borderRadius: 8,
+                            margin: 4,
+                            padding: 8,
+                          }}
+                          onPress={() => {
+                            navigation.navigate('HireNow', { id: request.id });
+                            console.log(request.id);
+                          }}
+                        >
+                          <Text style={{ color: 'white' }}>Add Review</Text>
+                        </TouchableOpacity>
+                      </View>
                     </View>
                   </View>
                 ))}
               </ScrollView>
             ) : (
-                <>
-                 <Text
-                    style={{
-                      fontSize: 20,
-                      fontWeight: 'bold',
-                      textAlign: 'center',
-                      padding: 20,
-                    }}
-                  >
-                   No Completed Requests  -_-
-                  </Text>
-                </>
-              )}
-            </ScrollView>
-          </>
-        ) : (
-          <></>
-        )}
-        
-
-            {view === 'Reviewed' ? (
               <>
-                <ScrollView>
-                  {reviewedRequests.length !== 0 ? (
-                    <ScrollView>
-                         <Text
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontWeight: 'bold',
+                    textAlign: 'center',
+                    padding: 20,
+                  }}
+                >
+                  No Completed Requests. If you have a completed request which
+                  was reviewd, check in Reviewed Requests!
+                </Text>
+              </>
+            )}
+          </ScrollView>
+        </>
+      ) : (
+        <></>
+      )}
+
+      {view === 'Reviewed' ? (
+        <>
+          <ScrollView
+            style={{ backgroundColor: 'white' }}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+          >
+            {reviewedRequests.length !== 0 ? (
+              <ScrollView>
+                <Text
                   style={{
                     fontSize: 20,
                     fontWeight: 'bold',
@@ -813,68 +927,106 @@ const RequestersStatusScreen = () => {
                 >
                   Reviewed Requests
                 </Text>
-                      {reviewedRequests.map((request, index) => (
-                        <View style={styles.container}>
-                          <View style={{ alignItems: 'center', flex: 1 }}>
-                            <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
-                              {request.task}
-                            </Text>
-                            <Text style={{ fontWeight: 'bold', fontSize: 16 }}>
-                              Date - {request.date}
-                            </Text>
+                {reviewedRequests.map((request, index) => (
+                  <View style={styles.container}>
+                    <View style={{ alignItems: 'felx-start', flex: 1 }}>
+                      <Text
+                        style={{ fontWeight: 'bold', fontSize: 18, margin: 4 }}
+                      >
+                        {request.task}
+                      </Text>
 
-                            <Text>Time - {request.time} H</Text>
+                      <Rating
+                        type="star"
+                        ratingCount={5}
+                        imageSize={20}
+                        isDisabled={true}
+                        readonly={true}
+                        startingValue={request.requestRating}
+                      />
+                      <Text
+                        style={{ margin: 6, fontSize: 16, color: '#525252' }}
+                      >
+                        <Icon
+                          name="calendar"
+                          type="material-community"
+                          color="#517fa4"
+                        />
+                        {request.date}
+                      </Text>
 
-                            <TouchableOpacity
-                              key={request.id}
-                              style={{
-                                height: 40,
-                                width: 90,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                backgroundColor: 'mediumturquoise',
-                                borderRadius: 8,
-                                margin: 4,
-                              }}
-                              onPress={() => {
-                                navigation.navigate('HireNow', {
-                                  id: request.id,
-                                });
-                                console.log(request.id);
-                              }}
-                            >
-                              <Text style={{ color: 'white' }}>View</Text>
-                            </TouchableOpacity>
-                          </View>
-                        </View>
-                      ))}
-                    </ScrollView>
-                  ) : (
-                    <>
-                     <Text
+                      <Text
+                        style={{ margin: 6, fontSize: 16, color: '#525252' }}
+                      >
+                        <Icon
+                          name="rate-review"
+                          type="material-icons"
+                          color="#517fa4"
+                        />
+                        {request.requestReview}
+                      </Text>
+
+                      <View
                         style={{
-                          fontSize: 20,
-                          fontWeight: 'bold',
-                          textAlign: 'center',
-                          padding: 20,
+                          flexDirection: 'row',
+                          flexWrap: 'wrap',
                         }}
                       >
-                        No Reviewed Requests by you -_-
-                      </Text>
-                    </>
-                  )}
-                </ScrollView>
-              </>
+                        <TouchableOpacity
+                          key={request.id}
+                          style={{
+                            height: 40,
+                            width: '96%',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: '#06b6d4',
+                            borderRadius: 8,
+                            margin: 4,
+                            padding: 8,
+                          }}
+                          onPress={() => {
+                            navigation.navigate('HireNow', { id: request.id });
+                            console.log(request.id);
+                          }}
+                        >
+                          <Text style={{ color: 'white' }}>View Request</Text>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  </View>
+                ))}
+              </ScrollView>
             ) : (
-              <></>
-            )}
-
-            {view === 'Rejected' ? (
               <>
-                <ScrollView>
-                  {rejectedRequests.length !== 0 ? (
-                    <ScrollView>
-                        <Text
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontWeight: 'bold',
+                    textAlign: 'center',
+                    padding: 20,
+                  }}
+                >
+                  No Reviewed Requests by you -_-
+                </Text>
+              </>
+            )}
+          </ScrollView>
+        </>
+      ) : (
+        <></>
+      )}
+
+      {view === 'Rejected' ? (
+        <>
+          <ScrollView
+            style={{ backgroundColor: 'white' }}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+          >
+            {rejectedRequests.length !== 0 ? (
+              <ScrollView>
+                <Text
                   style={{
                     fontSize: 20,
                     fontWeight: 'bold',
@@ -884,84 +1036,116 @@ const RequestersStatusScreen = () => {
                 >
                   Rejected Requests
                 </Text>
-                      {startedRequests.map((request, index) => (
-                        <View style={styles.container}>
-                          <View style={{ alignItems: 'center', flex: 1 }}>
-                            <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
-                              {request.task}
-                            </Text>
-                            <Text style={{ fontWeight: 'bold', fontSize: 16 }}>
-                              Date - {request.date}
-                            </Text>
+                {rejectedRequests.map((request, index) => (
+                  <View style={styles.container}>
+                    <View style={{ alignItems: 'felx-start', flex: 1 }}>
+                      <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
+                        {request.task}
+                      </Text>
+                      <Text
+                        style={{ margin: 6, fontSize: 16, color: '#525252' }}
+                      >
+                        <Icon
+                          name="calendar"
+                          type="material-community"
+                          color="#517fa4"
+                        />
+                        {request.date}
+                      </Text>
 
-                            <Text>Time - {request.time} H</Text>
-
-                            <TouchableOpacity
-                              key={request.id}
-                              style={{
-                                height: 40,
-                                width: 90,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                backgroundColor: 'mediumturquoise',
-                                borderRadius: 8,
-                                margin: 4,
-                              }}
-                              onPress={() => {
-                                navigation.navigate('HireNow', {
-                                  id: request.id,
-                                });
-                                console.log(request.id);
-                              }}
-                            >
-                              <Text style={{ color: 'white' }}>View</Text>
-                            </TouchableOpacity>
-
-                            
-                          </View>
-                        </View>
-                      ))}
-                    </ScrollView>
-                  ) : (
-                    <>
-                     <Text
+                      <Text
+                        style={{ margin: 6, fontSize: 16, color: '#525252' }}
+                      >
+                        <Icon
+                          name="clock-time-eight"
+                          type="material-community"
+                          color="#517fa4"
+                        />
+                        {request.time} H
+                      </Text>
+                      <Text
+                        style={{ margin: 6, fontSize: 16, color: '#525252' }}
+                      >
+                        <Icon
+                          name="google-maps"
+                          type="material-community"
+                          color="#517fa4"
+                        />
+                        {request.location}
+                      </Text>
+                      <View
                         style={{
-                          fontSize: 20,
-                          fontWeight: 'bold',
-                          textAlign: 'center',
-                          padding: 20,
+                          flexDirection: 'row',
+                          flexWrap: 'wrap',
                         }}
                       >
-                        No Results
-                      </Text>
-                    </>
-                  )}
+                        <TouchableOpacity
+                          key={request.id}
+                          style={{
+                            height: 40,
+                            width: '96%',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: '#06b6d4',
+                            borderRadius: 8,
+                            margin: 4,
+                            padding: 8,
+                          }}
+                          onPress={() => {
+                            navigation.navigate('HireNow', { id: request.id });
+                            console.log(request.id);
+                          }}
+                        >
+                          <Text style={{ color: 'white' }}>View Request</Text>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  </View>
+                ))}
+              </ScrollView>
+            ) : (
+              <>
+                <ScrollView
+                  style={{ backgroundColor: 'white' }}
+                  refreshControl={
+                    <RefreshControl
+                      refreshing={refreshing}
+                      onRefresh={onRefresh}
+                    />
+                  }
+                >
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      fontWeight: 'bold',
+                      textAlign: 'center',
+                      padding: 20,
+                    }}
+                  >
+                    None of your requests were Rejected!
+                  </Text>
                 </ScrollView>
               </>
-            ) : (
-              <></>
             )}
-
-</>
+          </ScrollView>
+        </>
+      ) : (
+        <></>
+      )}
+    </>
   );
-            }
-         
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    alignItems: 'center',
+
     justifyContent: 'center',
     padding: 15,
-    margin: 10,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 12,
-    },
-    shadowOpacity: 0.58,
-    shadowRadius: 16.0,
+
+    borderWidth: 1,
+    borderColor: '#a3a3a3',
 
     elevation: 24,
   },
