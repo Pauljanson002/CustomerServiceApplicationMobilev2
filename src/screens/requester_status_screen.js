@@ -408,19 +408,29 @@ const RequestersStatusScreen = () => {
               </ScrollView>
             ) : (
               <>
-                <Text
-                  style={{
-                    fontSize: 20,
-                    fontWeight: 'bold',
-                    textAlign: 'center',
-                    padding: 20,
-
-                    margin: 20,
-                  }}
+                <ScrollView
+                  style={{ backgroundColor: 'white' }}
+                  refreshControl={
+                    <RefreshControl
+                      refreshing={refreshing}
+                      onRefresh={onRefresh}
+                    />
+                  }
                 >
-                  No Pending Requests by you. Check if it's Accepted or
-                  Rejected!
-                </Text>
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      fontWeight: 'bold',
+                      textAlign: 'center',
+                      padding: 20,
+
+                      margin: 20,
+                    }}
+                  >
+                    No Pending Requests by you. Check if it's Accepted or
+                    Rejected!
+                  </Text>
+                </ScrollView>
               </>
             )}
           </ScrollView>
@@ -508,16 +518,26 @@ const RequestersStatusScreen = () => {
               </ScrollView>
             ) : (
               <>
-                <Text
-                  style={{
-                    fontSize: 20,
-                    fontWeight: 'bold',
-                    textAlign: 'center',
-                    padding: 20,
-                  }}
+                <ScrollView
+                  style={{ backgroundColor: 'white' }}
+                  refreshControl={
+                    <RefreshControl
+                      refreshing={refreshing}
+                      onRefresh={onRefresh}
+                    />
+                  }
                 >
-                  No Canceled Requests by you -_-
-                </Text>
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      fontWeight: 'bold',
+                      textAlign: 'center',
+                      padding: 20,
+                    }}
+                  >
+                    No Canceled Requests by you -_-
+                  </Text>
+                </ScrollView>
               </>
             )}
           </ScrollView>
@@ -634,18 +654,29 @@ const RequestersStatusScreen = () => {
               </ScrollView>
             ) : (
               <>
-                <Text
-                  style={{
-                    fontSize: 20,
-                    fontWeight: 'bold',
-                    textAlign: 'center',
-                    padding: 20,
-
-                    margin: 20,
-                  }}
+                <ScrollView
+                  style={{ backgroundColor: 'white' }}
+                  refreshControl={
+                    <RefreshControl
+                      refreshing={refreshing}
+                      onRefresh={onRefresh}
+                    />
+                  }
                 >
-                  No Accepted Requests. Check if it's still Pending or Rejected!
-                </Text>
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      fontWeight: 'bold',
+                      textAlign: 'center',
+                      padding: 20,
+
+                      margin: 20,
+                    }}
+                  >
+                    No Accepted Requests. Check if it's still Pending or
+                    Rejected!
+                  </Text>
+                </ScrollView>
               </>
             )}
           </ScrollView>
@@ -762,16 +793,26 @@ const RequestersStatusScreen = () => {
               </ScrollView>
             ) : (
               <>
-                <Text
-                  style={{
-                    fontSize: 20,
-                    fontWeight: 'bold',
-                    textAlign: 'center',
-                    padding: 20,
-                  }}
+                <ScrollView
+                  style={{ backgroundColor: 'white' }}
+                  refreshControl={
+                    <RefreshControl
+                      refreshing={refreshing}
+                      onRefresh={onRefresh}
+                    />
+                  }
                 >
-                  No Ongoing services!
-                </Text>
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      fontWeight: 'bold',
+                      textAlign: 'center',
+                      padding: 20,
+                    }}
+                  >
+                    No Ongoing services!
+                  </Text>
+                </ScrollView>
               </>
             )}
           </ScrollView>
@@ -863,7 +904,7 @@ const RequestersStatusScreen = () => {
                           <Text style={{ color: 'white' }}>View Request</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
-                          key={request.id+1}
+                          key={request.id + 1}
                           style={{
                             height: 40,
                             width: '43%',
@@ -888,17 +929,27 @@ const RequestersStatusScreen = () => {
               </ScrollView>
             ) : (
               <>
-                <Text
-                  style={{
-                    fontSize: 20,
-                    fontWeight: 'bold',
-                    textAlign: 'center',
-                    padding: 20,
-                  }}
+                <ScrollView
+                  style={{ backgroundColor: 'white' }}
+                  refreshControl={
+                    <RefreshControl
+                      refreshing={refreshing}
+                      onRefresh={onRefresh}
+                    />
+                  }
                 >
-                  No Completed Requests. If you have a completed request which
-                  was reviewd, check in Reviewed Requests!
-                </Text>
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      fontWeight: 'bold',
+                      textAlign: 'center',
+                      padding: 20,
+                    }}
+                  >
+                    No Completed Requests. If you have a completed request which
+                    was reviewd, check in Reviewed Requests!
+                  </Text>
+                </ScrollView>
               </>
             )}
           </ScrollView>
@@ -998,16 +1049,26 @@ const RequestersStatusScreen = () => {
               </ScrollView>
             ) : (
               <>
-                <Text
-                  style={{
-                    fontSize: 20,
-                    fontWeight: 'bold',
-                    textAlign: 'center',
-                    padding: 20,
-                  }}
+                <ScrollView
+                  style={{ backgroundColor: 'white' }}
+                  refreshControl={
+                    <RefreshControl
+                      refreshing={refreshing}
+                      onRefresh={onRefresh}
+                    />
+                  }
                 >
-                  No Reviewed Requests by you -_-
-                </Text>
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      fontWeight: 'bold',
+                      textAlign: 'center',
+                      padding: 20,
+                    }}
+                  >
+                    No Reviewed requests by you!
+                  </Text>
+                </ScrollView>
               </>
             )}
           </ScrollView>
@@ -1140,14 +1201,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-
+    alignItems: 'center',
     justifyContent: 'center',
     padding: 15,
+    margin: 10,
+    shadowColor: '#a5b4fc',
+    shadowOffset: {
+      width: 0,
+      height: 10,
+    },
+    shadowOpacity: 0.58,
+    shadowRadius: 12.0,
 
-    borderWidth: 1,
-    borderColor: '#a3a3a3',
-
-    elevation: 24,
+    elevation: 2,
   },
 });
 
