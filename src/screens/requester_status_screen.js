@@ -323,7 +323,11 @@ const RequestersStatusScreen = () => {
                 {pendingRequests.map((request, index) => (
                   <View style={styles.container}>
                     <View style={{ alignItems: 'felx-start', flex: 1 }}>
-                      <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
+                      <Text
+                        style={{ fontWeight: 'bold', fontSize: 18 }}
+                        numberOfLines={3}
+                        ellipsizeMode="tail"
+                      >
                         {request.task}
                       </Text>
                       <Text
@@ -452,7 +456,11 @@ const RequestersStatusScreen = () => {
                 {canceledRequests.map((request, index) => (
                   <View style={styles.container}>
                     <View style={{ alignItems: 'felx-start', flex: 1 }}>
-                      <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
+                      <Text
+                        style={{ fontWeight: 'bold', fontSize: 18 }}
+                        numberOfLines={3}
+                        ellipsizeMode="tail"
+                      >
                         {request.task}
                       </Text>
                       <Text
@@ -569,7 +577,11 @@ const RequestersStatusScreen = () => {
                 {acceptedRequests.map((request, index) => (
                   <View style={styles.container}>
                     <View style={{ alignItems: 'felx-start', flex: 1 }}>
-                      <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
+                      <Text
+                        style={{ fontWeight: 'bold', fontSize: 18 }}
+                        numberOfLines={3}
+                        ellipsizeMode="tail"
+                      >
                         {request.task}
                       </Text>
                       <Text
@@ -708,7 +720,11 @@ const RequestersStatusScreen = () => {
                 {startedRequests.map((request, index) => (
                   <View style={styles.container}>
                     <View style={{ alignItems: 'felx-start', flex: 1 }}>
-                      <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
+                      <Text
+                        style={{ fontWeight: 'bold', fontSize: 18 }}
+                        numberOfLines={3}
+                        ellipsizeMode="tail"
+                      >
                         {request.task}
                       </Text>
                       <Text
@@ -844,7 +860,11 @@ const RequestersStatusScreen = () => {
                 {completedRequests.map((request, index) => (
                   <View style={styles.container}>
                     <View style={{ alignItems: 'felx-start', flex: 1 }}>
-                      <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
+                      <Text
+                        style={{ fontWeight: 'bold', fontSize: 18 }}
+                        numberOfLines={3}
+                        ellipsizeMode="tail"
+                      >
                         {request.task}
                       </Text>
                       <Text
@@ -982,7 +1002,9 @@ const RequestersStatusScreen = () => {
                   <View style={styles.container}>
                     <View style={{ alignItems: 'felx-start', flex: 1 }}>
                       <Text
-                        style={{ fontWeight: 'bold', fontSize: 18, margin: 4 }}
+                        style={{ fontWeight: 'bold', fontSize: 18 }}
+                        numberOfLines={3}
+                        ellipsizeMode="tail"
                       >
                         {request.task}
                       </Text>
@@ -1100,7 +1122,11 @@ const RequestersStatusScreen = () => {
                 {rejectedRequests.map((request, index) => (
                   <View style={styles.container}>
                     <View style={{ alignItems: 'felx-start', flex: 1 }}>
-                      <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
+                      <Text
+                        style={{ fontWeight: 'bold', fontSize: 18 }}
+                        numberOfLines={3}
+                        ellipsizeMode="tail"
+                      >
                         {request.task}
                       </Text>
                       <Text

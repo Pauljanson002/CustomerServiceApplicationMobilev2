@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { NetworkStatus } from '@apollo/client';
-import {Select, VStack, CheckIcon, HStack, Checkbox, Text  } from 'native-base';
+import { Select, VStack, CheckIcon, HStack, Checkbox, Text } from 'native-base';
 import Constants from 'expo-constants';
 import { useMutation, useQuery, gql } from '@apollo/client';
 import { Rating } from 'react-native-ratings';
@@ -178,7 +178,8 @@ const wait = (timeout) => {
 };
 
 const ProvidersStatusScreen = () => {
-  const  { data, loading, error, refetch, networkStatus }  = useQuery(GET_SERVICE_REQUESTS_FOR_ME,
+  const { data, loading, error, refetch, networkStatus } = useQuery(
+    GET_SERVICE_REQUESTS_FOR_ME,
     { fetchPolicy: 'no-cache', notifyOnNetworkStatusChange: true }
   );
   const [refreshing, setRefreshing] = React.useState(false);
@@ -323,7 +324,11 @@ const ProvidersStatusScreen = () => {
                 {pendingRequests.map((request, index) => (
                   <View style={styles.container}>
                     <View style={{ alignItems: 'felx-start', flex: 1 }}>
-                      <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
+                      <Text
+                        style={{ fontWeight: 'bold', fontSize: 18 }}
+                        numberOfLines={3}
+                        ellipsizeMode="tail"
+                      >
                         {request.task}
                       </Text>
                       <Text
@@ -425,7 +430,8 @@ const ProvidersStatusScreen = () => {
                       padding: 20,
                     }}
                   >
-                    No Pending requests for you!. Check if it's canceled in Canceled requests!
+                    No Pending requests for you!. Check if it's canceled in
+                    Canceled requests!
                   </Text>
                 </ScrollView>
               </>
@@ -449,7 +455,11 @@ const ProvidersStatusScreen = () => {
                 {canceledRequests.map((request, index) => (
                   <View style={styles.container}>
                     <View style={{ alignItems: 'felx-start', flex: 1 }}>
-                      <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
+                      <Text
+                        style={{ fontWeight: 'bold', fontSize: 18 }}
+                        numberOfLines={3}
+                        ellipsizeMode="tail"
+                      >
                         {request.task}
                       </Text>
                       <Text
@@ -515,7 +525,7 @@ const ProvidersStatusScreen = () => {
               </ScrollView>
             ) : (
               <>
-               <ScrollView
+                <ScrollView
                   style={{ backgroundColor: 'white' }}
                   refreshControl={
                     <RefreshControl
@@ -566,7 +576,11 @@ const ProvidersStatusScreen = () => {
                 {acceptedRequests.map((request, index) => (
                   <View style={styles.container}>
                     <View style={{ alignItems: 'felx-start', flex: 1 }}>
-                      <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
+                      <Text
+                        style={{ fontWeight: 'bold', fontSize: 18 }}
+                        numberOfLines={3}
+                        ellipsizeMode="tail"
+                      >
                         {request.task}
                       </Text>
                       <Text
@@ -625,7 +639,6 @@ const ProvidersStatusScreen = () => {
                         >
                           <Text style={{ color: 'white' }}>View & Start</Text>
                         </TouchableOpacity>
-                      
 
                         <TouchableOpacity
                           key={request.id + 1}
@@ -703,7 +716,11 @@ const ProvidersStatusScreen = () => {
                 {startedRequests.map((request, index) => (
                   <View style={styles.container}>
                     <View style={{ alignItems: 'felx-start', flex: 1 }}>
-                      <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
+                      <Text
+                        style={{ fontWeight: 'bold', fontSize: 18 }}
+                        numberOfLines={3}
+                        ellipsizeMode="tail"
+                      >
                         {request.task}
                       </Text>
                       <Text
@@ -839,7 +856,11 @@ const ProvidersStatusScreen = () => {
                 {completedRequests.map((request, index) => (
                   <View style={styles.container}>
                     <View style={{ alignItems: 'felx-start', flex: 1 }}>
-                      <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
+                      <Text
+                        style={{ fontWeight: 'bold', fontSize: 18 }}
+                        numberOfLines={3}
+                        ellipsizeMode="tail"
+                      >
                         {request.task}
                       </Text>
                       <Text
@@ -899,7 +920,7 @@ const ProvidersStatusScreen = () => {
                           <Text style={{ color: 'white' }}>View Request</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
-                          key={request.id+1}
+                          key={request.id + 1}
                           style={{
                             height: 40,
                             width: '43%',
@@ -924,7 +945,7 @@ const ProvidersStatusScreen = () => {
               </ScrollView>
             ) : (
               <>
-               <ScrollView
+                <ScrollView
                   style={{ backgroundColor: 'white' }}
                   refreshControl={
                     <RefreshControl
@@ -976,7 +997,9 @@ const ProvidersStatusScreen = () => {
                   <View style={styles.container}>
                     <View style={{ alignItems: 'felx-start', flex: 1 }}>
                       <Text
-                        style={{ fontWeight: 'bold', fontSize: 18, margin: 4 }}
+                        style={{ fontWeight: 'bold', fontSize: 18 }}
+                        numberOfLines={3}
+                        ellipsizeMode="tail"
                       >
                         {request.task}
                       </Text>
@@ -1094,7 +1117,11 @@ const ProvidersStatusScreen = () => {
                 {rejectedRequests.map((request, index) => (
                   <View style={styles.container}>
                     <View style={{ alignItems: 'felx-start', flex: 1 }}>
-                      <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
+                      <Text
+                        style={{ fontWeight: 'bold', fontSize: 18 }}
+                        numberOfLines={3}
+                        ellipsizeMode="tail"
+                      >
                         {request.task}
                       </Text>
                       <Text
@@ -1190,7 +1217,6 @@ const ProvidersStatusScreen = () => {
     </>
   );
 };
-         
 
 const styles = StyleSheet.create({
   container: {
