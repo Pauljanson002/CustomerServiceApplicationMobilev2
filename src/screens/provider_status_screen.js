@@ -178,7 +178,7 @@ const wait = (timeout) => {
   return new Promise((resolve) => setTimeout(resolve, timeout));
 };
 
-const ProvidersStatusScreen = () => {
+const ProvidersStatusScreen = ({ navigation}) => {
   const { data, loading, error, refetch, networkStatus } = useQuery(
     GET_SERVICE_REQUESTS_FOR_ME,
     { fetchPolicy: 'no-cache', notifyOnNetworkStatusChange: true }
@@ -370,7 +370,7 @@ const ProvidersStatusScreen = () => {
                             padding: 8,
                           }}
                           onPress={() => {
-                            navigation.navigate('HireNow', { id: request.id });
+                            navigation.navigate('Request', { id: request.id });
                             console.log(request.id);
                           }}
                         >
@@ -504,7 +504,7 @@ const ProvidersStatusScreen = () => {
                             padding: 8,
                           }}
                           onPress={() => {
-                            navigation.navigate('HireNow', { id: request.id });
+                            navigation.navigate('Request', { id: request.id });
                             console.log(request.id);
                           }}
                         >
@@ -625,7 +625,7 @@ const ProvidersStatusScreen = () => {
                             padding: 8,
                           }}
                           onPress={() => {
-                            navigation.navigate('HireNow', { id: request.id });
+                            navigation.navigate('Request', { id: request.id });
                             console.log(request.id);
                           }}
                         >
@@ -787,7 +787,7 @@ const ProvidersStatusScreen = () => {
                             margin: 4,
                           }}
                           onPress={() => {
-                            navigation.navigate('HireNow', { id: request.id });
+                            navigation.navigate('Request', { id: request.id });
                             console.log(request.id);
                           }}
                         >
@@ -927,7 +927,7 @@ const ProvidersStatusScreen = () => {
                             padding: 8,
                           }}
                           onPress={() => {
-                            navigation.navigate('HireNow', { id: request.id });
+                            navigation.navigate('Request', { id: request.id });
                             console.log(request.id);
                           }}
                         >
@@ -1048,7 +1048,7 @@ const ProvidersStatusScreen = () => {
                             padding: 8,
                           }}
                           onPress={() => {
-                            navigation.navigate('HireNow', { id: request.id });
+                            navigation.navigate('Request', { id: request.id });
                             console.log(request.id);
                           }}
                         >
@@ -1169,7 +1169,7 @@ const ProvidersStatusScreen = () => {
                             padding: 8,
                           }}
                           onPress={() => {
-                            navigation.navigate('HireNow', { id: request.id });
+                            navigation.navigate('Request', { id: request.id });
                             console.log(request.id);
                           }}
                         >

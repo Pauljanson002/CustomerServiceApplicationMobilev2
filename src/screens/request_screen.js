@@ -9,6 +9,7 @@ import {
   Text,
   TextInput,
   View,
+  RefreshControl,
 
 } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -199,6 +200,7 @@ const GET_USER_BY_ID = gql`
   }
 `;
 const RequestScreen = ({ navigation, route }) => {
+  const toast = useToast();
 
 
     const [formData, setData] = React.useState({});
@@ -497,7 +499,9 @@ const RequestScreen = ({ navigation, route }) => {
       case 0:
         return (
           <>
-            <ScrollView contentContainerStyle={styles.stage}>
+            <ScrollView contentContainerStyle={styles.stage} refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }>
               {myDetails.id === requester_id ? (
                 <>
                   <HStack>
@@ -595,11 +599,22 @@ const RequestScreen = ({ navigation, route }) => {
                       <Button onPress={clickDetails} style={styles.buttons}>
                         View Details
                       </Button>
+                      <Button
+                         onPress={() => {
+                          navigation.navigate('Accept', { id: id });
+                          
+                        }}
+                        style={styles.buttons}
+                        isDisabled={serviceReqDetails.state !== 'Pending'}
+                        
+                      >
+                        Accept
+                      </Button>
 
                       <Button
                         onPress={startRequest}
                         style={styles.buttons}
-                        disabled={serviceReqDetails.state !== 'Accepted'}
+                        isDisabled={serviceReqDetails.state !== 'Accepted'}
                       >
                         Start
                       </Button>
@@ -609,7 +624,7 @@ const RequestScreen = ({ navigation, route }) => {
                         style={{
                           backgroundColor: '#f43f5e',
                           height: 40,
-                          width: '20%',
+                          width: '30%',
                           justifyContent: 'center',
                           alignItems: 'center',
 
@@ -617,7 +632,7 @@ const RequestScreen = ({ navigation, route }) => {
                           margin: 4,
                           padding: 8,
                         }}
-                        disabled={
+                        isDisabled={
                           serviceReqDetails.date +
                             'T' +
                             serviceReqDetails.time <
@@ -631,11 +646,11 @@ const RequestScreen = ({ navigation, route }) => {
                       </Button>
                       <Button
                         onPress={completeRequest}
-                        disabled={serviceReqDetails.state !== 'Started'}
+                        isDisabled={serviceReqDetails.state !== 'Started'}
                         style={{
                           backgroundColor: '#059669',
                           height: 40,
-                          width: '20%',
+                          width: '30%',
                           justifyContent: 'center',
                           alignItems: 'center',
 
@@ -790,7 +805,7 @@ const RequestScreen = ({ navigation, route }) => {
                       <Button
                         onPress={clickReschedule}
                         style={styles.buttons}
-                        disabled={
+                        isDisabled={
                           serviceReqDetails.date +
                             'T' +
                             serviceReqDetails.time <
@@ -807,7 +822,7 @@ const RequestScreen = ({ navigation, route }) => {
                       <Button
                         onPress={clickEdit}
                         style={styles.buttons}
-                        disabled={
+                        isDisabled={
                           serviceReqDetails.state !== 'Pending' ||
                           serviceReqDetails.date +
                             'T' +
@@ -831,7 +846,7 @@ const RequestScreen = ({ navigation, route }) => {
                           margin: 4,
                           padding: 8,
                         }}
-                        disabled={
+                        isDisabled={
                           serviceReqDetails.date +
                             'T' +
                             serviceReqDetails.time <
@@ -843,7 +858,7 @@ const RequestScreen = ({ navigation, route }) => {
                         Cancel
                       </Button>
                       <Button
-                        disabled={
+                        isDisabled={
                           serviceReqDetails.state === 'Pending' ||
                           serviceReqDetails.state === 'Canceled' ||
                           serviceReqDetails.state === 'Rejected'
@@ -879,7 +894,7 @@ const RequestScreen = ({ navigation, route }) => {
                       <Button
                         onPress={startRequest}
                         style={styles.buttons}
-                        disabled={serviceReqDetails.state !== 'Accepted'}
+                        isDisabled={serviceReqDetails.state !== 'Accepted'}
                       >
                         Start
                       </Button>
@@ -897,7 +912,7 @@ const RequestScreen = ({ navigation, route }) => {
                           margin: 4,
                           padding: 8,
                         }}
-                        disabled={
+                        isDisabled={
                           serviceReqDetails.date +
                             'T' +
                             serviceReqDetails.time <
@@ -911,7 +926,7 @@ const RequestScreen = ({ navigation, route }) => {
                       </Button>
                       <Button
                         onPress={completeRequest}
-                        disabled={serviceReqDetails.state !== 'Started'}
+                        isDisabled={serviceReqDetails.state !== 'Started'}
                         style={{
                           backgroundColor: '#059669',
                           height: 40,
@@ -1027,7 +1042,7 @@ const RequestScreen = ({ navigation, route }) => {
                         <Button
                           onPress={clickReschedule}
                           style={styles.buttons}
-                          disabled={
+                          isDisabled={
                             serviceReqDetails.date +
                               'T' +
                               serviceReqDetails.time <
@@ -1044,7 +1059,7 @@ const RequestScreen = ({ navigation, route }) => {
                         <Button
                           onPress={clickEdit}
                           style={styles.buttons}
-                          disabled={
+                          isDisabled={
                             serviceReqDetails.state !== 'Pending' ||
                             serviceReqDetails.date +
                               'T' +
@@ -1068,7 +1083,7 @@ const RequestScreen = ({ navigation, route }) => {
                             margin: 4,
                             padding: 8,
                           }}
-                          disabled={
+                          isDisabled={
                             serviceReqDetails.date +
                               'T' +
                               serviceReqDetails.time <
@@ -1080,7 +1095,7 @@ const RequestScreen = ({ navigation, route }) => {
                           Cancel
                         </Button>
                         <Button
-                          disabled={
+                          isDisabled={
                             serviceReqDetails.state === 'Pending' ||
                             serviceReqDetails.state === 'Canceled' ||
                             serviceReqDetails.state === 'Rejected'
@@ -1116,7 +1131,7 @@ const RequestScreen = ({ navigation, route }) => {
                         <Button
                           onPress={startRequest}
                           style={styles.buttons}
-                          disabled={serviceReqDetails.state !== 'Accepted'}
+                          isDisabled={serviceReqDetails.state !== 'Accepted'}
                         >
                           Start
                         </Button>
@@ -1134,7 +1149,7 @@ const RequestScreen = ({ navigation, route }) => {
                             margin: 4,
                             padding: 8,
                           }}
-                          disabled={
+                          isDisabled={
                             serviceReqDetails.date +
                               'T' +
                               serviceReqDetails.time <
@@ -1148,7 +1163,7 @@ const RequestScreen = ({ navigation, route }) => {
                         </Button>
                         <Button
                           onPress={completeRequest}
-                          disabled={serviceReqDetails.state !== 'Started'}
+                          isDisabled={serviceReqDetails.state !== 'Started'}
                           style={{
                             backgroundColor: '#059669',
                             height: 40,
@@ -1222,13 +1237,14 @@ const styles = StyleSheet.create({
   },
   buttons: {
     height: 40,
-    width: '20%',
+    width: '30%',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#06b6d4',
     borderRadius: 8,
     margin: 4,
     padding: 8,
+  
   },
   pickers: {
  
