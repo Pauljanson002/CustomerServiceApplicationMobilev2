@@ -155,7 +155,7 @@ const wait = (timeout) => {
   return new Promise((resolve) => setTimeout(resolve, timeout));
 };
 
-const RequestersStatusScreen = () => {
+const RequestersStatusScreen = ({ navigation}) => {
   const { data, loading, error, refetch, networkStatus } = useQuery(
     GET_SERVICE_REQUESTS_OF_ME,
     { fetchPolicy: 'no-cache', notifyOnNetworkStatusChange: true }
@@ -347,7 +347,7 @@ const RequestersStatusScreen = () => {
                             padding: 8,
                           }}
                           onPress={() => {
-                            navigation.navigate('HireNow', { id: request.id });
+                            navigation.navigate('Request', { id: request.id });
                             console.log(request.id);
                           }}
                         >
@@ -485,7 +485,7 @@ const RequestersStatusScreen = () => {
                             padding: 8,
                           }}
                           onPress={() => {
-                            navigation.navigate('HireNow', { id: request.id });
+                            navigation.navigate('Request', { id: request.id });
                             console.log(request.id);
                           }}
                         >
@@ -606,7 +606,7 @@ const RequestersStatusScreen = () => {
                             padding: 8,
                           }}
                           onPress={() => {
-                            navigation.navigate('HireNow', { id: request.id });
+                            navigation.navigate('Request', { id: request.id });
                             console.log(request.id);
                           }}
                         >
@@ -752,7 +752,7 @@ const RequestersStatusScreen = () => {
                             padding: 8,
                           }}
                           onPress={() => {
-                            navigation.navigate('HireNow', { id: request.id });
+                            navigation.navigate('Request', { id: request.id });
                             console.log(request.id);
                           }}
                         >
@@ -892,7 +892,7 @@ const RequestersStatusScreen = () => {
                             padding: 8,
                           }}
                           onPress={() => {
-                            navigation.navigate('HireNow', { id: request.id });
+                            navigation.navigate('Request', { id: request.id });
                             console.log(request.id);
                           }}
                         >
@@ -911,7 +911,7 @@ const RequestersStatusScreen = () => {
                             padding: 8,
                           }}
                           onPress={() => {
-                            navigation.navigate('HireNow', { id: request.id });
+                            navigation.navigate('Request', { id: request.id });
                             console.log(request.id);
                           }}
                         >
@@ -1033,7 +1033,7 @@ const RequestersStatusScreen = () => {
                             padding: 8,
                           }}
                           onPress={() => {
-                            navigation.navigate('HireNow', { id: request.id });
+                            navigation.navigate('Request', { id: request.id });
                             console.log(request.id);
                           }}
                         >
@@ -1154,7 +1154,7 @@ const RequestersStatusScreen = () => {
                             padding: 8,
                           }}
                           onPress={() => {
-                            navigation.navigate('HireNow', { id: request.id });
+                            navigation.navigate('Request', { id: request.id });
                             console.log(request.id);
                           }}
                         >

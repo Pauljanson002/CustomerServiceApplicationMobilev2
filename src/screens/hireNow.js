@@ -166,7 +166,7 @@ function BuildingAForm({ id, navigation }) {
       variables: {
         ...values,
         createServiceRequestLocation: data.me.address,
-        createServiceRequestDate: date.getFullYear()+"-"+(date.getMonth()<10?'0':'')+date.getMonth()+"-"+(date.getDate()<10?'0':'')+date.getDate(),
+        createServiceRequestDate: date.getFullYear()+"-"+(date.getMonth()+1<10?'0':'')+parseInt(date.getMonth()+1)+"-"+(date.getDate()<10?'0':'')+date.getDate(),
         createServiceRequestTime: (time.getHours()<10?'0':'')+time.getHours()+":"+(time.getMinutes()<10?'0':'')+time.getMinutes(),
         createServiceRequestPayMethod: payment,
         createServiceRequestTask: task,
@@ -196,7 +196,7 @@ function BuildingAForm({ id, navigation }) {
           <FormControl.Label _text={{ bold: true }}>
             Service Date
           </FormControl.Label>
-          <Input disabled value={date?(date.getDate()+"-"+(date.getMonth()<10?'0':'')+date.getMonth()+"-"+date.getFullYear()):''} />
+          <Input disabled value={date?(date.getDate()+"-"+(date.getMonth()+1<10?'0':'')+parseInt(date.getMonth()+1)+"-"+date.getFullYear()):''} />
           <Button title={"Select a Date"} onPress={showDatePicker} />
           <DateTimePickerModal
             isVisible={isDatePickerVisible}

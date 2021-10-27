@@ -18,6 +18,7 @@ import HireNowScreen from './hireNow';
 import Success from './successful';
 import RequesterStatus from './requester_status_screen';
 import ProviderStatus from './provider_status_screen';
+import Request from './request_screen';
 
 const ProviderStack = createStackNavigator({
     Providers:ProvidersScreen
@@ -27,8 +28,10 @@ const MyStack = createStackNavigator({
     MyProfile: MyProfileScreen,
     ProviderStatus:ProviderStatus,
     RequesterStatus:RequesterStatus,
+    Request:Request,
     
 });
+
 
 const RequesterStack = createStackNavigator({
     Requesters: RequestersScreen,
@@ -37,6 +40,8 @@ const RequesterStack = createStackNavigator({
     Success:Success
 
 });
+
+
 
 const TabNavigator = createBottomTabNavigator({
 

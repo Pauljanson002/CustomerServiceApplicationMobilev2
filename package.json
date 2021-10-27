@@ -38,6 +38,7 @@
     "react-native-svg": "12.1.1",
     "react-native-swiper": "^1.6.0",
     "react-native-tab-view": "^2.14.2",
+    "react-native-tableview-simple": "^4.3.0",
     "react-native-toast-message": "^1.6.0",
     "react-native-toast-notifications": "^3.2.2",
     "react-native-vertical-tab-view": "^0.1.3",
