@@ -768,7 +768,7 @@ const ProvidersStatusScreen = ({ navigation}) => {
                             padding: 8,
                           }}
                           onPress={() => {
-                            navigation.navigate('HireNow', { id: request.id });
+                            navigation.navigate('Request', { id: request.id });
                             console.log(request.id);
                           }}
                         >
@@ -908,7 +908,7 @@ const ProvidersStatusScreen = ({ navigation}) => {
                             padding: 8,
                           }}
                           onPress={() => {
-                            navigation.navigate('HireNow', { id: request.id });
+                            navigation.navigate('Request', { id: request.id });
                             console.log(request.id);
                           }}
                         >

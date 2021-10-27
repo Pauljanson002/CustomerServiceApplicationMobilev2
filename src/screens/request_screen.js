@@ -10,7 +10,6 @@ import {
   TextInput,
   View,
   RefreshControl,
-
 } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { Cell, Section, TableView } from 'react-native-tableview-simple';
@@ -18,8 +17,16 @@ import { useToast } from 'react-native-toast-notifications';
 import { Icon } from 'react-native-elements';
 import { TabView, SceneMap } from 'react-native-tab-view';
 import { NetworkStatus } from '@apollo/client';
-import { Button as Button2, VStack, CheckIcon, HStack, Button ,  FormControl,TextArea,
-    Input} from 'native-base';
+import {
+  Button as Button2,
+  VStack,
+  CheckIcon,
+  HStack,
+  Button,
+  FormControl,
+  TextArea,
+  Input,
+} from 'native-base';
 import Constants from 'expo-constants';
 import { useMutation, useQuery, gql } from '@apollo/client';
 import { Rating } from 'react-native-ratings';
@@ -202,16 +209,14 @@ const GET_USER_BY_ID = gql`
 const RequestScreen = ({ navigation, route }) => {
   const toast = useToast();
 
+  const [formData, setData] = React.useState({});
 
-    const [formData, setData] = React.useState({});
+  const [isDatePickerVisible, setDatePickerVisibility] = React.useState(false);
+  const [isTimePickerVisible, setTimePickerVisibility] = React.useState(false);
+  const [datepick, setDatepick] = React.useState(new Date());
+  const [time, setTime] = React.useState('');
 
-
-    const [isDatePickerVisible, setDatePickerVisibility] = React.useState(false);
-    const [isTimePickerVisible, setTimePickerVisibility] = React.useState(false);
-    const [datepick, setDatepick] = React.useState(new Date());
-    const [time, setTime] = React.useState('');
-
-    let [payment, setPayment] = React.useState('');
+  let [payment, setPayment] = React.useState('');
   const id = navigation.getParam('id');
   const [values, setValues] = React.useState();
   const [status, setStatus] = React.useState();
@@ -279,9 +284,8 @@ const RequestScreen = ({ navigation, route }) => {
     }
   );
 
-  const [rescheduleServiceRequest, { loading_reschedule, error_reschedule }] = useMutation(
-    RESCHEDULE_SR,
-    {
+  const [rescheduleServiceRequest, { loading_reschedule, error_reschedule }] =
+    useMutation(RESCHEDULE_SR, {
       onCompleted: (data) => {
         toast.show('Successfully rescheduled the request', {
           type: 'success',
@@ -292,8 +296,7 @@ const RequestScreen = ({ navigation, route }) => {
         console.log(error);
         toast.show('Failed ', { type: 'success', animationType: 'slide-in' });
       },
-    }
-  );
+    });
 
   const [editServiceRequest, { loading_edit, error_edit }] = useMutation(
     EDIT_SR,
@@ -326,7 +329,14 @@ const RequestScreen = ({ navigation, route }) => {
     });
 
   if (networkStatus === NetworkStatus.refetch) return <Text>Refetching!</Text>;
-  if (loading || loading_cancel || loading_start || loading_complete||loading_edit||loading_reschedule)
+  if (
+    loading ||
+    loading_cancel ||
+    loading_start ||
+    loading_complete ||
+    loading_edit ||
+    loading_reschedule
+  )
     return <Text>Loading..</Text>;
 
   const data_serviceRequest = data;
@@ -347,8 +357,20 @@ const RequestScreen = ({ navigation, route }) => {
     'Saturday',
   ];
 
-  const months = ["January", "February", "March", "April", "May", "June", "July",
-         "August", "September", "October", "November", "December"];
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
 
   const dayName = days[date.getDay()];
   console.log(date.getDay());
@@ -413,8 +435,6 @@ const RequestScreen = ({ navigation, route }) => {
     refetch();
   };
 
-
-
   const ratingChanged = (newRating) => {
     setRating(newRating);
     console.log(newRating);
@@ -432,7 +452,7 @@ const RequestScreen = ({ navigation, route }) => {
     });
   };
   const clickEdit = (event) => {
-    console.log("edit");
+    console.log('edit');
     setView({
       renderView: 2,
     });
@@ -465,17 +485,25 @@ const RequestScreen = ({ navigation, route }) => {
     hideTimePicker();
   };
 
-
-
   const onSubmit = () => {
     rescheduleServiceRequest({
       variables: {
         ...values,
         rescheduleServiceRequestId: id,
         rescheduleServiceRequestDate:
-        datepick.getFullYear()+"-"+(datepick.getMonth()+1<10?'0':'')+parseInt(datepick.getMonth()+1)+"-"+(datepick.getDate()<10?'0':'')+datepick.getDate(),
+          datepick.getFullYear() +
+          '-' +
+          (datepick.getMonth() + 1 < 10 ? '0' : '') +
+          parseInt(datepick.getMonth() + 1) +
+          '-' +
+          (datepick.getDate() < 10 ? '0' : '') +
+          datepick.getDate(),
         rescheduleServiceRequestTime:
-        (time.getHours()<10?'0':'')+time.getHours()+":"+(time.getMinutes()<10?'0':'')+time.getMinutes(),
+          (time.getHours() < 10 ? '0' : '') +
+          time.getHours() +
+          ':' +
+          (time.getMinutes() < 10 ? '0' : '') +
+          time.getMinutes(),
       },
     });
     console.log('done');
@@ -486,8 +514,7 @@ const RequestScreen = ({ navigation, route }) => {
       variables: {
         ...values,
         editServiceRequestId: id,
-        editServiceRequestTask:task,
-
+        editServiceRequestTask: task,
       },
     });
     console.log('done');
@@ -499,9 +526,12 @@ const RequestScreen = ({ navigation, route }) => {
       case 0:
         return (
           <>
-            <ScrollView contentContainerStyle={styles.stage} refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }>
+            <ScrollView
+              contentContainerStyle={styles.stage}
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
+            >
               {myDetails.id === requester_id ? (
                 <>
                   <HStack>
@@ -515,7 +545,7 @@ const RequestScreen = ({ navigation, route }) => {
                       <Button
                         onPress={clickReschedule}
                         style={styles.buttons}
-                        disabled={
+                        isDisabled={
                           serviceReqDetails.date +
                             'T' +
                             serviceReqDetails.time <
@@ -532,12 +562,13 @@ const RequestScreen = ({ navigation, route }) => {
                       <Button
                         onPress={clickEdit}
                         style={styles.buttons}
-                        disabled={
+                        isDisabled={
                           serviceReqDetails.state !== 'Pending' ||
-                          serviceReqDetails.date + 'T' + serviceReqDetails.time <
+                          serviceReqDetails.date +
+                            'T' +
+                            serviceReqDetails.time <
                             new Date().toISOString().substr(0, 16)
                         }
-                      
                       >
                         Edit Task
                       </Button>
@@ -555,7 +586,7 @@ const RequestScreen = ({ navigation, route }) => {
                           margin: 4,
                           padding: 8,
                         }}
-                        disabled={
+                        isDisabled={
                           serviceReqDetails.date +
                             'T' +
                             serviceReqDetails.time <
@@ -567,7 +598,7 @@ const RequestScreen = ({ navigation, route }) => {
                         Cancel
                       </Button>
                       <Button
-                        disabled={
+                        isDisabled={
                           serviceReqDetails.state === 'Pending' ||
                           serviceReqDetails.state === 'Canceled' ||
                           serviceReqDetails.state === 'Rejected'
@@ -600,13 +631,11 @@ const RequestScreen = ({ navigation, route }) => {
                         View Details
                       </Button>
                       <Button
-                         onPress={() => {
+                        onPress={() => {
                           navigation.navigate('Accept', { id: id });
-                          
                         }}
                         style={styles.buttons}
                         isDisabled={serviceReqDetails.state !== 'Pending'}
-                        
                       >
                         Accept
                       </Button>
@@ -665,8 +694,12 @@ const RequestScreen = ({ navigation, route }) => {
                   </HStack>
                 </>
               )}
-              <TableView appearance="light">
+              <TableView
+                appearance="light"
+                style={{ backgroundColor: '#faf5ff' }}
+              >
                 <Section
+                  style={{ backgroundColor: '#faf5ff' }}
                   header="REQUEST DETAILS"
                   footer="Rescheduling, canceling and rejecting a service request is allowed only 20 minuites before the scheduled time. After the aceptance of a request it cannot be edited"
                 >
@@ -945,7 +978,14 @@ const RequestScreen = ({ navigation, route }) => {
                   </HStack>
                 </>
               )}
-              <ScrollView style={{ backgroundColor: 'white', width:'98%',borderWidth:1, borderColor:'#0369a1' }}></ScrollView>
+              <ScrollView
+                style={{
+                  backgroundColor: 'white',
+                  width: '98%',
+                  borderWidth: 1,
+                  borderColor: '#0369a1',
+                }}
+              ></ScrollView>
 
               <Text
                 style={{
@@ -954,7 +994,7 @@ const RequestScreen = ({ navigation, route }) => {
                   fontWeight: 'bold',
                   marginTop: 10,
                   marginBottom: 14,
-                  marginLeft:12
+                  marginLeft: 12,
                 }}
               >
                 Reschedule Request
@@ -967,17 +1007,22 @@ const RequestScreen = ({ navigation, route }) => {
                   <Input
                     disabled
                     value={
-                        datepick
+                      datepick
                         ? datepick.getDate() +
                           '-' +
-                          
-                          months[datepick.getMonth()]+
+                          months[datepick.getMonth()] +
                           '-' +
                           datepick.getFullYear()
                         : ''
                     }
                   />
-                  <Button title={'Select a Date'} onPress={showDatePicker} style={styles.pickers}>Select a Date</Button>
+                  <Button
+                    title={'Select a Date'}
+                    onPress={showDatePicker}
+                    style={styles.pickers}
+                  >
+                    Select a Date
+                  </Button>
                   <DateTimePickerModal
                     isVisible={isDatePickerVisible}
                     mode="date"
@@ -1004,7 +1049,11 @@ const RequestScreen = ({ navigation, route }) => {
                     }
                   />
 
-                  <Button title="Select a Time" onPress={showTimePicker} style={styles.pickers} />
+                  <Button
+                    title="Select a Time"
+                    onPress={showTimePicker}
+                    style={styles.pickers}
+                  />
                   <DateTimePickerModal
                     isVisible={isTimePickerVisible}
                     mode="time"
@@ -1014,247 +1063,244 @@ const RequestScreen = ({ navigation, route }) => {
                   />
                 </FormControl>
 
-                
                 <Button2 onPress={onSubmit} mt="5" colorScheme="cyan">
                   Submit
                 </Button2>
               </VStack>
-              </ScrollView>
-            
+            </ScrollView>
           </>
         );
 
-
-        case 2:
-          return (
-            <>
-              <ScrollView contentContainerStyle={styles.stage}>
-                {myDetails.id === requester_id ? (
-                  <>
-                    <HStack>
-                      <ScrollView
-                        contentContainerStyle={styles.stage}
-                        horizontal={true}
+      case 2:
+        return (
+          <>
+            <ScrollView contentContainerStyle={styles.stage}>
+              {myDetails.id === requester_id ? (
+                <>
+                  <HStack>
+                    <ScrollView
+                      contentContainerStyle={styles.stage}
+                      horizontal={true}
+                    >
+                      <Button onPress={clickDetails} style={styles.buttons}>
+                        View Details
+                      </Button>
+                      <Button
+                        onPress={clickReschedule}
+                        style={styles.buttons}
+                        isDisabled={
+                          serviceReqDetails.date +
+                            'T' +
+                            serviceReqDetails.time <
+                            now.toISOString().substr(0, 16) ||
+                          serviceReqDetails.state === 'Canceled' ||
+                          serviceReqDetails.state === 'Rejected' ||
+                          serviceReqDetails.state === 'Completed' ||
+                          serviceReqDetails.state === 'Reviewed' ||
+                          serviceReqDetails.state === 'Started'
+                        }
                       >
-                        <Button onPress={clickDetails} style={styles.buttons}>
-                          View Details
-                        </Button>
-                        <Button
-                          onPress={clickReschedule}
-                          style={styles.buttons}
-                          isDisabled={
-                            serviceReqDetails.date +
-                              'T' +
-                              serviceReqDetails.time <
-                              now.toISOString().substr(0, 16) ||
-                            serviceReqDetails.state === 'Canceled' ||
-                            serviceReqDetails.state === 'Rejected' ||
-                            serviceReqDetails.state === 'Completed' ||
-                            serviceReqDetails.state === 'Reviewed' ||
-                            serviceReqDetails.state === 'Started'
-                          }
-                        >
-                          Reschedule
-                        </Button>
-                        <Button
-                          onPress={clickEdit}
-                          style={styles.buttons}
-                          isDisabled={
-                            serviceReqDetails.state !== 'Pending' ||
-                            serviceReqDetails.date +
-                              'T' +
-                              serviceReqDetails.time <
-                              new Date().toISOString().substr(0, 16)
-                          }
-                        >
-                          Edit Task
-                        </Button>
-  
-                        <Button
-                          onPress={cancelRequest}
-                          style={{
-                            backgroundColor: '#f43f5e',
-                            height: 40,
-                            width: '20%',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-  
-                            borderRadius: 8,
-                            margin: 4,
-                            padding: 8,
-                          }}
-                          isDisabled={
-                            serviceReqDetails.date +
-                              'T' +
-                              serviceReqDetails.time <
-                              now.toISOString().substr(0, 16) ||
-                            (serviceReqDetails.state !== 'Pending' &&
-                              serviceReqDetails.state !== 'Accepted')
-                          }
-                        >
-                          Cancel
-                        </Button>
-                        <Button
-                          isDisabled={
-                            serviceReqDetails.state === 'Pending' ||
-                            serviceReqDetails.state === 'Canceled' ||
-                            serviceReqDetails.state === 'Rejected'
-                          }
-                          style={{
-                            backgroundColor: '#059669',
-                            height: 40,
-                            width: '20%',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-  
-                            borderRadius: 8,
-                            margin: 4,
-                            padding: 8,
-                          }}
-                        >
-                          Make Payment
-                        </Button>
-                      </ScrollView>
-                    </HStack>
-                  </>
-                ) : (
-                  <>
-                    <HStack>
-                      <ScrollView
-                        contentContainerStyle={styles.stage}
-                        horizontal={true}
+                        Reschedule
+                      </Button>
+                      <Button
+                        onPress={clickEdit}
+                        style={styles.buttons}
+                        isDisabled={
+                          serviceReqDetails.state !== 'Pending' ||
+                          serviceReqDetails.date +
+                            'T' +
+                            serviceReqDetails.time <
+                            new Date().toISOString().substr(0, 16)
+                        }
                       >
-                        <Button onPress={clickDetails} style={styles.buttons}>
-                          View Details
-                        </Button>
-  
-                        <Button
-                          onPress={startRequest}
-                          style={styles.buttons}
-                          isDisabled={serviceReqDetails.state !== 'Accepted'}
-                        >
-                          Start
-                        </Button>
-  
-                        <Button
-                          onPress={rejectRequest}
-                          style={{
-                            backgroundColor: '#f43f5e',
-                            height: 40,
-                            width: '20%',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-  
-                            borderRadius: 8,
-                            margin: 4,
-                            padding: 8,
-                          }}
-                          isDisabled={
-                            serviceReqDetails.date +
-                              'T' +
-                              serviceReqDetails.time <
-                              now.toISOString().substr(0, 16) ||
-                            serviceReqDetails.state === 'Completed' ||
-                            serviceReqDetails.state === 'Started' ||
-                            serviceReqDetails.state === 'Reviewed'
-                          }
-                        >
-                          Reject
-                        </Button>
-                        <Button
-                          onPress={completeRequest}
-                          isDisabled={serviceReqDetails.state !== 'Started'}
-                          style={{
-                            backgroundColor: '#059669',
-                            height: 40,
-                            width: '20%',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-  
-                            borderRadius: 8,
-                            margin: 4,
-                            padding: 8,
-                          }}
-                        >
-                          Mark Completed
-                        </Button>
-                      </ScrollView>
-                    </HStack>
-                  </>
-                )}
-                <ScrollView style={{ backgroundColor: 'white', width:'98%',borderWidth:1, borderColor:'#0369a1' }}></ScrollView>
-  
-                <Text
-                  style={{
-                    color: '#525252',
-                    fontSize: 20,
-                    fontWeight: 'bold',
-                    marginTop: 10,
-                    marginBottom: 14,
-                    marginLeft:12
-                  }}
-                >
-                  Edit Request
-                </Text>
-                <VStack width="90%" mx="3">
-                <FormControl isRequired >
-          <FormControl.Label _text={{ bold: true }} style={{marginTop:10}}>
-            Job Description
-          </FormControl.Label>
-          <TextArea
-            placeholder="Explain what you need to get done"
-            name={'editServiceRequestTask'}
-            onChangeText={(value) => {
-              setData({ ...formData, max: value });
-              setTask(value);
-            }}
-          />
-          </FormControl>
-                   
-                 
-  
-                  
-                  <Button2 onPress={onEditSubmit} mt="5" colorScheme="cyan">
-                    Submit
-                  </Button2>
-                </VStack>
-                </ScrollView>
-              
-            </>
-          );
-  
-  
+                        Edit Task
+                      </Button>
 
+                      <Button
+                        onPress={cancelRequest}
+                        style={{
+                          backgroundColor: '#f43f5e',
+                          height: 40,
+                          width: '20%',
+                          justifyContent: 'center',
+                          alignItems: 'center',
 
+                          borderRadius: 8,
+                          margin: 4,
+                          padding: 8,
+                        }}
+                        isDisabled={
+                          serviceReqDetails.date +
+                            'T' +
+                            serviceReqDetails.time <
+                            now.toISOString().substr(0, 16) ||
+                          (serviceReqDetails.state !== 'Pending' &&
+                            serviceReqDetails.state !== 'Accepted')
+                        }
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        isDisabled={
+                          serviceReqDetails.state === 'Pending' ||
+                          serviceReqDetails.state === 'Canceled' ||
+                          serviceReqDetails.state === 'Rejected'
+                        }
+                        style={{
+                          backgroundColor: '#059669',
+                          height: 40,
+                          width: '20%',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+
+                          borderRadius: 8,
+                          margin: 4,
+                          padding: 8,
+                        }}
+                      >
+                        Make Payment
+                      </Button>
+                    </ScrollView>
+                  </HStack>
+                </>
+              ) : (
+                <>
+                  <HStack>
+                    <ScrollView
+                      contentContainerStyle={styles.stage}
+                      horizontal={true}
+                    >
+                      <Button onPress={clickDetails} style={styles.buttons}>
+                        View Details
+                      </Button>
+
+                      <Button
+                        onPress={startRequest}
+                        style={styles.buttons}
+                        isDisabled={serviceReqDetails.state !== 'Accepted'}
+                      >
+                        Start
+                      </Button>
+
+                      <Button
+                        onPress={rejectRequest}
+                        style={{
+                          backgroundColor: '#f43f5e',
+                          height: 40,
+                          width: '20%',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+
+                          borderRadius: 8,
+                          margin: 4,
+                          padding: 8,
+                        }}
+                        isDisabled={
+                          serviceReqDetails.date +
+                            'T' +
+                            serviceReqDetails.time <
+                            now.toISOString().substr(0, 16) ||
+                          serviceReqDetails.state === 'Completed' ||
+                          serviceReqDetails.state === 'Started' ||
+                          serviceReqDetails.state === 'Reviewed'
+                        }
+                      >
+                        Reject
+                      </Button>
+                      <Button
+                        onPress={completeRequest}
+                        isDisabled={serviceReqDetails.state !== 'Started'}
+                        style={{
+                          backgroundColor: '#059669',
+                          height: 40,
+                          width: '20%',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+
+                          borderRadius: 8,
+                          margin: 4,
+                          padding: 8,
+                        }}
+                      >
+                        Mark Completed
+                      </Button>
+                    </ScrollView>
+                  </HStack>
+                </>
+              )}
+              <ScrollView
+                style={{
+                  backgroundColor: 'white',
+                  width: '98%',
+                  borderWidth: 1,
+                  borderColor: '#0369a1',
+                }}
+              ></ScrollView>
+
+              <Text
+                style={{
+                  color: '#525252',
+                  fontSize: 20,
+                  fontWeight: 'bold',
+                  marginTop: 10,
+                  marginBottom: 14,
+                  marginLeft: 12,
+                }}
+              >
+                Edit Request
+              </Text>
+              <VStack width="90%" mx="3">
+                <FormControl isRequired>
+                  <FormControl.Label
+                    _text={{ bold: true }}
+                    style={{ marginTop: 10 }}
+                  >
+                    Job Description
+                  </FormControl.Label>
+                  <TextArea
+                    placeholder="Explain what you need to get done"
+                    name={'editServiceRequestTask'}
+                    onChangeText={(value) => {
+                      setData({ ...formData, max: value });
+                      setTask(value);
+                    }}
+                  />
+                </FormControl>
+
+                <Button2 onPress={onEditSubmit} mt="5" colorScheme="cyan">
+                  Submit
+                </Button2>
+              </VStack>
+            </ScrollView>
+          </>
+        );
     }
   }
 };
 const styles = StyleSheet.create({
   stage: {
-    backgroundColor: '#EFEFF4',
+    backgroundColor: '#faf5ff',
     paddingTop: 20,
     paddingBottom: 20,
   },
   buttons: {
     height: 40,
-    width: '30%',
+    width: '25%',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#06b6d4',
     borderRadius: 8,
     margin: 4,
     padding: 8,
-  
   },
   pickers: {
- 
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'white',
     borderRadius: 8,
     margin: 1,
-    height:'20%',
-    color:'blue'
+    height: '20%',
+    color: 'blue',
   },
 });
 
