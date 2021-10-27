@@ -10,6 +10,7 @@ import {
   TextInput,
   View,
   RefreshControl,
+  TouchableOpacity,
 } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { Cell, Section, TableView } from 'react-native-tableview-simple';
@@ -787,18 +788,58 @@ const RequestScreen = ({ navigation, route }) => {
               ) : (
                 <>
                   {serviceReqDetails.state === 'Reviewed' &&
-                  myDetails.id === requester_id ? (
+                  myDetails.id === provider_id ? (
                     <>
                       <Text>Customer feedback</Text>
-                      <Text>If provider to customer review </Text>
+                      <>
+                           <TouchableOpacity
+                          key={id}
+                          style={{
+                            height: 40,
+                            width: '43%',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: '#fcd34d',
+                            borderRadius: 8,
+                            margin: 4,
+                            padding: 8,
+                          }}
+                          onPress={() => {
+                            navigation.navigate('ProviderReview', { id: id});
+                            console.log(id);
+                          }}
+                          disabled={serviceReqDetails.customerReview !== null||serviceReqDetails.customerReview !== ''}
+                        >
+                          <Text style={{ color: 'white' }}>Add Review</Text>
+                        </TouchableOpacity>
+                        </>
                     </>
                   ) : (
                     <>
                       {serviceReqDetails.state === 'Completed' &&
-                      myDetails.id === requester_id &&
-                      serviceReqDetails.customerReview === null ? (
+                      myDetails.id === provider_id 
+                      ? (
                         <>
-                          <Text>Provider add customer rating</Text>
+                           <TouchableOpacity
+                          key={id}
+                          style={{
+                            height: 40,
+                            width: '43%',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: '#fcd34d',
+                            borderRadius: 8,
+                            margin: 4,
+                            padding: 8,
+                          }}
+                          onPress={() => {
+                            navigation.navigate('ProviderReview', { id: id });
+                            console.log(id);
+                          }}
+                          disabled={serviceReqDetails.customerReview !== null||serviceReqDetails.customerReview !== ''}
+                        >
+                          <Text style={{ color: 'white' }}>Add Review</Text>
+                        </TouchableOpacity>
                         </>
                       ) : (
                         <>

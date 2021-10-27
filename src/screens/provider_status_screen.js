@@ -927,8 +927,8 @@ const ProvidersStatusScreen = ({ navigation}) => {
                             padding: 8,
                           }}
                           onPress={() => {
-                            navigation.navigate('Request', { id: request.id });
-                            console.log(request.id);
+                            navigation.navigate('ProviderReview', { id: id });
+                            console.log(id);
                           }}
                         >
                           <Text style={{ color: 'white' }}>Add Review</Text>

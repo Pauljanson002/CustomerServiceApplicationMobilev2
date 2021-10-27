@@ -911,7 +911,7 @@ const RequestersStatusScreen = ({ navigation}) => {
                             padding: 8,
                           }}
                           onPress={() => {
-                            navigation.navigate('Request', { id: request.id });
+                            navigation.navigate('RequesterReview', { id: request.id });
                             console.log(request.id);
                           }}
                         >

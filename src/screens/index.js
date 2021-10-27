@@ -20,6 +20,8 @@ import RequesterStatus from './requester_status_screen';
 import ProviderStatus from './provider_status_screen';
 import Request from './request_screen';
 import Accept from './accept_screen';
+import ProviderReview from './provider_review_screen';
+import RequesterReview from './requester_review_screen';
 
 const ProviderStack = createStackNavigator({
     Providers:ProvidersScreen
@@ -30,7 +32,9 @@ const MyStack = createStackNavigator({
     ProviderStatus:ProviderStatus,
     RequesterStatus:RequesterStatus,
     Request:Request,
-    Accept:Accept
+    Accept:Accept,
+    ProviderReview:ProviderReview,
+    RequesterReview:RequesterReview,
     
 });
 
