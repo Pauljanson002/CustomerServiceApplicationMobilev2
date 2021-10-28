@@ -56,24 +56,22 @@ const RequesterReviewScreen = ({ navigation, route }) => {
   const id = navigation.getParam('id');
   const [values, setValues] = React.useState();
   const [review, setReview] = React.useState();
-  const [rating, setRating] = React.useState(0);
+  const [rating, setRating] = React.useState();
 
-  const [
-    feedbackServiceRequest,
-    { loading_Cfeedback, error_Cfeedback },
-  ] = useMutation(FEEDBACK_SR, {
-    onCompleted: (data) => {
-      toast.show('Successfully reviewed the provider', {
-        type: 'success',
-        animationType: 'slide-in',
-      });
-      navigation.navigate('Request', { id: id });
-    },
-    onError: (error) => {
-      console.log(error);
-      toast.show('Failed ', { type: 'success', animationType: 'slide-in' });
-    },
-  });
+  const [feedbackServiceRequest, { loading_Cfeedback, error_Cfeedback }] =
+    useMutation(FEEDBACK_SR, {
+      onCompleted: (data) => {
+        toast.show('Successfully reviewed the provider', {
+          type: 'success',
+          animationType: 'slide-in',
+        });
+        navigation.navigate('Request', { id: id });
+      },
+      onError: (error) => {
+        console.log(error);
+        toast.show('Failed ', { type: 'success', animationType: 'slide-in' });
+      },
+    });
 
   if (loading_Cfeedback) return <Text>Loading</Text>;
 
@@ -86,9 +84,8 @@ const RequesterReviewScreen = ({ navigation, route }) => {
     feedbackServiceRequest({
       variables: {
         feedbackServiceRequestId: id,
-        feedbackServiceRequestCustomerRating: rating,
-        feedbackServiceRequestCustomerReview:review
-
+        feedbackServiceRequestRequestRating: rating,
+        feedbackServiceRequestRequestReview: review,
       },
     });
   };
@@ -112,18 +109,25 @@ const RequesterReviewScreen = ({ navigation, route }) => {
           marginLeft: 12,
         }}
       >
-        Tell about your customer!
+        Review the service provided!
       </Text>
       <VStack width="90%" mx="3">
+        <Rating
+          type="heart"
+          ratingCount={5}
+          imageSize={40}
+          showRating
+          onFinishRating={ratingChanged}
+        />
         <FormControl isRequired>
           <FormControl.Label _text={{ bold: true }} style={{ marginTop: 10 }}>
-            How was your experience with the customer
+            How was your experience?
           </FormControl.Label>
           <TextArea
-            
             name={'feedbackServiceRequestRequestReview'}
             onChangeText={(value) => {
               setData({ ...formData, max: value });
+              console.log(value);
               setReview(value);
             }}
           />

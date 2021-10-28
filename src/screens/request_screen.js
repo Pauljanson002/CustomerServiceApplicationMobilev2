@@ -695,6 +695,34 @@ const RequestScreen = ({ navigation, route }) => {
                   </HStack>
                 </>
               )}
+
+              {serviceReqDetails.state === 'Reviewed' ? (
+                <>
+                  <Rating
+                    type="heart"
+                    ratingCount={5}
+                    imageSize={40}
+                    showRating
+                    readonly={true}
+                    startingValue={serviceReqDetails.requestRating}
+                    ratingBackgroundColor="#c8c7c8"
+                  />
+                  <Text
+                    style={{
+                      margin: 6,
+                      fontSize: 20,
+                      color: '#525252',
+                      alignContent: 'center',
+                      alignSelf: 'center',
+                    }}
+                  >
+                    "{serviceReqDetails.requestReview}"
+                  </Text>
+                </>
+              ) : (
+                <></>
+              )}
+
               <TableView
                 appearance="light"
                 style={{ backgroundColor: '#faf5ff' }}
@@ -775,86 +803,101 @@ const RequestScreen = ({ navigation, route }) => {
                   />
                 </Section>
               </TableView>
+
               {serviceReqDetails.state === 'Completed' &&
               myDetails.id === requester_id &&
               status !== 'Reviewed' ? (
                 <>
-                  <Text>Add review</Text>
-                  <Text>Form</Text>
-                  <Text>How much do you rate our service</Text>
-                  <Text>Share your experience</Text>
-                  <Text>If provider to customer review </Text>
+                  <TouchableOpacity
+                    key={id}
+                    style={{
+                      height: 40,
+                      width: '43%',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      backgroundColor: '#fcd34d',
+                      borderRadius: 8,
+                      margin: 4,
+                      padding: 8,
+                      alignSelf: 'center',
+                    }}
+                    onPress={() => {
+                      navigation.navigate('RequesterReview', { id: id });
+                      console.log(id);
+                    }}
+                  >
+                    <Text style={{ color: 'white' }}>Add Review</Text>
+                  </TouchableOpacity>
+               
+                </>
+              ) : (
+                <></>
+              )}
+
+              {myDetails.id === provider_id &&
+              !serviceReqDetails.customerReview ? (
+                <>
+                  <TouchableOpacity
+                    key={id}
+                    style={{
+                      height: 40,
+                      width: '49%',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      backgroundColor: '#fcd34d',
+                      borderRadius: 8,
+                      margin: 4,
+                      padding: 8,
+                      alignSelf: 'center',
+                    }}
+                    onPress={() => {
+                      navigation.navigate('ProviderReview', { id: id });
+                      console.log(id);
+                    }}
+                  >
+                    <Text style={{ color: 'white' }}>
+                      Add Review to customer
+                    </Text>
+                  </TouchableOpacity>
                 </>
               ) : (
                 <>
-                  {serviceReqDetails.state === 'Reviewed' &&
-                  myDetails.id === provider_id ? (
+                  {serviceReqDetails.customerReview ? (
                     <>
-                      <Text>Customer feedback</Text>
-                      <>
-                           <TouchableOpacity
-                          key={id}
-                          style={{
-                            height: 40,
-                            width: '43%',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            backgroundColor: '#fcd34d',
-                            borderRadius: 8,
-                            margin: 4,
-                            padding: 8,
-                          }}
-                          onPress={() => {
-                            navigation.navigate('ProviderReview', { id: id});
-                            console.log(id);
-                          }}
-                          disabled={serviceReqDetails.customerReview !== null||serviceReqDetails.customerReview !== ''}
-                        >
-                          <Text style={{ color: 'white' }}>Add Review</Text>
-                        </TouchableOpacity>
-                        </>
+                      <Text
+                        style={{
+                          margin: 6,
+                          fontSize: 16,
+                          color: '#525252',
+                          alignContent: 'center',
+                          alignSelf: 'center',
+                        }}
+                      >
+                        Review of the customer
+                      </Text>
+                      <Rating
+                        type="heart"
+                        ratingCount={5}
+                        imageSize={20}
+                        showRating
+                        readonly={true}
+                        startingValue={serviceReqDetails.customerRating}
+                        ratingBackgroundColor="#c8c7c8"
+                      />
+                      <Text
+                        style={{
+                          margin: 6,
+                          fontSize: 20,
+                          color: '#525252',
+                          alignContent: 'center',
+                          alignSelf: 'center',
+                        }}
+                      >
+                        "{serviceReqDetails.customerReview}"
+                      </Text>
                     </>
                   ) : (
-                    <>
-                      {serviceReqDetails.state === 'Completed' &&
-                      myDetails.id === provider_id 
-                      ? (
-                        <>
-                           <TouchableOpacity
-                          key={id}
-                          style={{
-                            height: 40,
-                            width: '43%',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            backgroundColor: '#fcd34d',
-                            borderRadius: 8,
-                            margin: 4,
-                            padding: 8,
-                          }}
-                          onPress={() => {
-                            navigation.navigate('ProviderReview', { id: id });
-                            console.log(id);
-                          }}
-                          disabled={serviceReqDetails.customerReview !== null||serviceReqDetails.customerReview !== ''}
-                        >
-                          <Text style={{ color: 'white' }}>Add Review</Text>
-                        </TouchableOpacity>
-                        </>
-                      ) : (
-                        <>
-                          {serviceReqDetails.state === 'Reiewed' &&
-                          myDetails.id === requester_id &&
-                          serviceReqDetails.customerReview === null ? (
-                            <>
-                              <Text>Provider add customer rating</Text>
-                            </>
-                          ) : (
-                            <></>
-                          )}
-                        </>
-                      )}
-                    </>
+                    <></>
                   )}
                 </>
               )}
