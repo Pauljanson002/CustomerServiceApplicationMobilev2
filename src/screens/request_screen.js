@@ -1136,9 +1136,11 @@ const RequestScreen = ({ navigation, route }) => {
                   <Button
                     title={'Select a Date'}
                     onPress={showDatePicker}
-                    style={styles.pickers}
+                    style={{backgroundColor:'#f3e8ff'}}
                   >
+                    <Text style={{color:'#4c1d95'}}>
                     Select a Date
+                    </Text>
                   </Button>
                   <DateTimePickerModal
                     isVisible={isDatePickerVisible}
@@ -1169,8 +1171,10 @@ const RequestScreen = ({ navigation, route }) => {
                   <Button
                     title="Select a Time"
                     onPress={showTimePicker}
-                    style={styles.pickers}
-                  />
+                    style={{backgroundColor:'#f3e8ff', height:35}}
+                  > <Text style={{color:'#4c1d95'}}>
+                  Select a Time
+                  </Text></Button>
                   <DateTimePickerModal
                     isVisible={isTimePickerVisible}
                     mode="time"
@@ -1375,7 +1379,7 @@ const RequestScreen = ({ navigation, route }) => {
                     Job Description
                   </FormControl.Label>
                   <TextArea
-                    placeholder="Explain what you need to get done"
+                    placeholder="Re-enter your requirement in full"
                     name={'editServiceRequestTask'}
                     onChangeText={(value) => {
                       setData({ ...formData, max: value });
