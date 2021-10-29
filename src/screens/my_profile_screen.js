@@ -16,6 +16,7 @@ import {
 } from 'native-base';
 import Box from 'native-base/src/components/primitives/Box/index';
 import Stack from 'native-base/src/components/primitives/Stack/Stack';
+//import UploadImage from '../components/UploadImage';
 
 const MyProfileScreen = (props) => {
   const signOut = () => {
@@ -104,6 +105,7 @@ const MyProfileScreen = (props) => {
              
            }}
          >
+           
            <Text style={{ color: 'white' }}>Status of the requests for me</Text>
          </TouchableOpacity>
           <Button onPress={signOut}>Sign Out</Button>

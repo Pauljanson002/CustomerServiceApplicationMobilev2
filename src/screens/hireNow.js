@@ -1,5 +1,13 @@
-import React, { useState } from 'react';
-import { Text, View, TextInput, Platform, Button } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  Platform,
+  Image,
+  Button,
+} from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { useQuery, gql, useMutation } from '@apollo/client';
 import {
@@ -12,11 +20,15 @@ import {
   Center,
   CheckIcon,
   Select,
+  HStack,
 } from 'native-base';
+import { AntDesign } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
 
 import Toast from 'react-native-toast-message';
 import { ScrollView } from 'react-native-gesture-handler';
 import Loading from '../components/Loading';
+import UploadImage from '../components/UploadImage';
 
 const GET_ME = gql`
   query Query {
@@ -72,7 +84,199 @@ const CREATE_NEW_SR = gql`
   }
 `;
 
-function BuildingAForm({ id, navigation }) {
+function BuildingAForm({ id, navigation, onChangeValues }) {
+  //IMAGE_UPLOAD
+  let CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/dpb0ths5c/upload';
+  const [image, setImage] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [photo, setPhoto] = useState(null);
+  const [image2, setImage2] = useState(null);
+  const [photo2, setPhoto2] = useState(null);
+  useEffect(() => {
+    checkForCameraRollPermission();
+    checkForCameraPermission();
+  }, []);
+
+  const checkForCameraRollPermission = async () => {
+    const { status } = await ImagePicker.getMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+    } else {
+      console.log('Media Permissions are granted');
+    }
+  };
+  const checkForCameraPermission = async () => {
+    const { status } = await ImagePicker.getCameraPermissionsAsync();
+    if (status !== 'granted') {
+      await ImagePicker.requestCameraPermissionsAsync();
+    } else {
+      console.log('Camera Permissions are granted');
+    }
+  };
+//upload image from media library
+  const addImage = async () => {
+    let _image = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 0.5,
+      base64: true,
+    });
+
+    console.log(JSON.stringify(_image));
+
+    if (!_image.cancelled) {
+      setImage(_image.uri);
+
+      let base64Img = `data:image/jpg;base64,${_image.base64}`;
+
+      let data = {
+        file: base64Img,
+        upload_preset: 'serviceRequest',
+      };
+      setUploading(true);
+      fetch(CLOUDINARY_URL, {
+        body: JSON.stringify(data),
+        headers: {
+          'content-type': 'application/json',
+        },
+        method: 'POST',
+      })
+        .then(async (r) => {
+          let data = await r.json();
+          console.log(data);
+          setPhoto(data.url);
+          setUploading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setUploading(false);
+        });
+    }
+  };
+//upload image from camera
+  const getImage = async () => {
+    let _image = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+
+      aspect: [4, 3],
+      quality: 0.5,
+      base64: true,
+    });
+
+    console.log(JSON.stringify(_image));
+
+    if (!_image.cancelled) {
+      setImage(_image.uri);
+
+      let base64Img = `data:image/jpg;base64,${_image.base64}`;
+
+      let data = {
+        file: base64Img,
+        upload_preset: 'serviceRequest',
+      };
+      setUploading(true);
+      fetch(CLOUDINARY_URL, {
+        body: JSON.stringify(data),
+        headers: {
+          'content-type': 'application/json',
+        },
+        method: 'POST',
+      })
+        .then(async (r) => {
+          let data = await r.json();
+          console.log(data);
+          setPhoto(data.url);
+          setUploading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setUploading(false);
+        });
+    }
+  };
+  const addImage2 = async () => {
+    let _image = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 0.5,
+      base64: true,
+    });
+
+    console.log(JSON.stringify(_image));
+
+    if (!_image.cancelled) {
+      setImage2(_image.uri);
+
+      let base64Img = `data:image/jpg;base64,${_image.base64}`;
+
+      let data = {
+        file: base64Img,
+        upload_preset: 'serviceRequest',
+      };
+      setUploading(true);
+      fetch(CLOUDINARY_URL, {
+        body: JSON.stringify(data),
+        headers: {
+          'content-type': 'application/json',
+        },
+        method: 'POST',
+      })
+        .then(async (r) => {
+          let data = await r.json();
+          console.log(data);
+          setPhoto2(data.url);
+          setUploading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setUploading(false);
+        });
+    }
+  };
+//upload image from camera
+  const getImage2 = async () => {
+    let _image = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+
+      aspect: [4, 3],
+      quality: 0.5,
+      base64: true,
+    });
+
+    console.log(JSON.stringify(_image));
+
+    if (!_image.cancelled) {
+      setImage2(_image.uri);
+
+      let base64Img = `data:image/jpg;base64,${_image.base64}`;
+
+      let data = {
+        file: base64Img,
+        upload_preset: 'serviceRequest',
+      };
+      setUploading(true);
+      fetch(CLOUDINARY_URL, {
+        body: JSON.stringify(data),
+        headers: {
+          'content-type': 'application/json',
+        },
+        method: 'POST',
+      })
+        .then(async (r) => {
+          let data = await r.json();
+          console.log(data);
+          setPhoto2(data.url);
+          setUploading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setUploading(false);
+        });
+    }
+  };
+//HIRE NOW FORM
   const [formData, setData] = useState({});
   const [values, setValues] = useState({
     createServiceRequestProviderId: id,
@@ -85,7 +289,14 @@ function BuildingAForm({ id, navigation }) {
   const [min, setMin] = useState();
   const [max, setMax] = useState();
   const [task, setTask] = useState();
+  const [image1, setImage1] = useState();
   let [payment, setPayment] = React.useState('');
+
+  onChangeValues = (values) => {
+    const { type, value } = values;
+    console.log(value);
+    setImage1(value);
+  };
 
   function ToastComponent() {
     React.useEffect(() => {
@@ -108,6 +319,10 @@ function BuildingAForm({ id, navigation }) {
     });
   if (loading_mutation || loading) {
     return <Text>Loading..</Text>;
+  }
+
+  if (uploading) {
+    return <Text>Uploading..</Text>;
   }
 
   const showDatePicker = () => {
@@ -166,12 +381,26 @@ function BuildingAForm({ id, navigation }) {
       variables: {
         ...values,
         createServiceRequestLocation: data.me.address,
-        createServiceRequestDate: date.getFullYear()+"-"+(date.getMonth()+1<10?'0':'')+parseInt(date.getMonth()+1)+"-"+(date.getDate()<10?'0':'')+date.getDate(),
-        createServiceRequestTime: (time.getHours()<10?'0':'')+time.getHours()+":"+(time.getMinutes()<10?'0':'')+time.getMinutes(),
+        createServiceRequestDate:
+          date.getFullYear() +
+          '-' +
+          (date.getMonth() + 1 < 10 ? '0' : '') +
+          parseInt(date.getMonth() + 1) +
+          '-' +
+          (date.getDate() < 10 ? '0' : '') +
+          date.getDate(),
+        createServiceRequestTime:
+          (time.getHours() < 10 ? '0' : '') +
+          time.getHours() +
+          ':' +
+          (time.getMinutes() < 10 ? '0' : '') +
+          time.getMinutes(),
         createServiceRequestPayMethod: payment,
         createServiceRequestTask: task,
         createServiceRequestMinPrice: min,
         createServiceRequestMaxPrice: max,
+        createServiceRequestImage1: photo,
+        createServiceRequestImage2: photo2,
       },
     });
     console.log('done');
@@ -179,25 +408,44 @@ function BuildingAForm({ id, navigation }) {
   };
 
   return (
-    <ScrollView style={{ backgroundColor: 'white', width:'98%',borderWidth:1, borderColor:'#0369a1' }}>
+    <ScrollView
+      style={{
+        backgroundColor: 'white',
+        width: '98%',
+        borderWidth: 1,
+        borderColor: '#0369a1',
+      }}
+    >
       <Text
         style={{
           color: '#525252',
           fontSize: 20,
           fontWeight: 'bold',
           marginTop: 10,
-          marginBottom:14
+          marginBottom: 14,
         }}
       >
-       Create Service Request
+        Create Service Request
       </Text>
       <VStack width="90%" mx="3">
         <FormControl isRequired>
           <FormControl.Label _text={{ bold: true }}>
             Service Date
           </FormControl.Label>
-          <Input disabled value={date?(date.getDate()+"-"+(date.getMonth()+1<10?'0':'')+parseInt(date.getMonth()+1)+"-"+date.getFullYear()):''} />
-          <Button title={"Select a Date"} onPress={showDatePicker} />
+          <Input
+            disabled
+            value={
+              date
+                ? date.getDate() +
+                  '-' +
+                  (date.getMonth() + 1 < 10 ? '0' : '') +
+                  parseInt(date.getMonth() + 1) +
+                  '-' +
+                  date.getFullYear()
+                : ''
+            }
+          />
+          <Button title={'Select a Date'} onPress={showDatePicker} />
           <DateTimePickerModal
             isVisible={isDatePickerVisible}
             mode="date"
@@ -211,8 +459,19 @@ function BuildingAForm({ id, navigation }) {
             Service Time
           </FormControl.Label>
 
-          <Input disabled value={time!==''?((time.getHours()<10?'0':'')+time.getHours()+":"+(time.getMinutes()<10?'0':'')+time.getMinutes()):''} />
-          
+          <Input
+            disabled
+            value={
+              time !== ''
+                ? (time.getHours() < 10 ? '0' : '') +
+                  time.getHours() +
+                  ':' +
+                  (time.getMinutes() < 10 ? '0' : '') +
+                  time.getMinutes()
+                : ''
+            }
+          />
+
           <Button title="Select a Time" onPress={showTimePicker} />
           <DateTimePickerModal
             isVisible={isTimePickerVisible}
@@ -224,19 +483,20 @@ function BuildingAForm({ id, navigation }) {
         </FormControl>
 
         <FormControl disabled>
-          <FormControl.Label _text={{ bold: true }} style={{marginTop:10}}>
+          <FormControl.Label _text={{ bold: true }} style={{ marginTop: 10 }}>
             Service Location
           </FormControl.Label>
           <Input disabled value={data.me.address} />
         </FormControl>
 
         <FormControl isRequired isInvalid={'name' in errors}>
-          <FormControl.Label _text={{ bold: true }} style={{marginTop:10}}>
+          <FormControl.Label _text={{ bold: true }} style={{ marginTop: 10 }}>
             Price Range you expect to pay
           </FormControl.Label>
           <Input
             placeholder="Min Value"
             name={'createServiceRequestMinPrice'}
+            value={min}
             onChangeText={(value) => {
               setData({ ...formData, min: value });
               setMin(value);
@@ -248,6 +508,7 @@ function BuildingAForm({ id, navigation }) {
           <Input
             placeholder="Max Value"
             name={'createServiceRequestMaxPrice'}
+            value={max}
             onChangeText={(value) => {
               setData({ ...formData, max: value });
               setMax(value);
@@ -255,7 +516,7 @@ function BuildingAForm({ id, navigation }) {
           />
         </FormControl>
         <FormControl isRequired isInvalid={'name' in errors}>
-          <FormControl.Label _text={{ bold: true }} style={{marginTop:10}}>
+          <FormControl.Label _text={{ bold: true }} style={{ marginTop: 10 }}>
             Payment Method
           </FormControl.Label>
           <VStack alignItems="center" space={4}>
@@ -278,18 +539,80 @@ function BuildingAForm({ id, navigation }) {
           </VStack>
         </FormControl>
         <FormControl isRequired isInvalid={'name' in errors}>
-          <FormControl.Label _text={{ bold: true }} style={{marginTop:10}}>
+          <FormControl.Label _text={{ bold: true }} style={{ marginTop: 10 }}>
             Job Description
           </FormControl.Label>
           <TextArea
             placeholder="Explain what you need to get done"
             name={'createServiceRequestTask'}
+            value={task}
             onChangeText={(value) => {
               setData({ ...formData, max: value });
               setTask(value);
             }}
           />
         </FormControl>
+
+
+
+
+        <HStack>
+          <View style={imageUploaderStyles.container}>
+            {image && (
+              <Image
+                source={{ uri: image }}
+                style={{ width: 150, height: 150 }}
+              />
+            )}
+            <View style={imageUploaderStyles.uploadBtnContainer}>
+              <TouchableOpacity
+                onPress={addImage}
+                style={imageUploaderStyles.uploadBtn}
+              >
+                <Text>{image ? 'Edit' : 'Upload'} Image 1</Text>
+                <AntDesign name="camera" size={20} color="black" />
+              </TouchableOpacity>
+            </View>
+            <View>
+              <TouchableOpacity
+                onPress={getImage}
+                style={imageUploaderStyles.uploadBtn}
+              >
+                <Text>{image ? 'Edit' : 'Camera'} </Text>
+                <AntDesign name="camera" size={20} color="black" />
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={imageUploaderStyles.container}>
+            {image2 && (
+              <Image
+                source={{ uri: image2 }}
+                style={{ width: 150, height: 150 }}
+              />
+            )}
+            <View style={imageUploaderStyles.uploadBtnContainer}>
+              <TouchableOpacity
+                onPress={addImage2}
+                style={imageUploaderStyles.uploadBtn}
+              >
+                <Text>{image2 ? 'Edit' : 'Upload'} Image 2</Text>
+                <AntDesign name="camera" size={20} color="black" />
+              </TouchableOpacity>
+            </View>
+            <View>
+              <TouchableOpacity
+                onPress={getImage2}
+                style={imageUploaderStyles.uploadBtn}
+              >
+                <Text>{image2 ? 'Edit' : 'Camera'} </Text>
+                <AntDesign name="camera" size={20} color="black" />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </HStack>
+
+
+
         <Button2 onPress={onSubmit} mt="5" colorScheme="cyan">
           Submit
         </Button2>
@@ -308,6 +631,33 @@ const HireNowScreen = ({ navigation, route }) => {
     </NativeBaseProvider>
   );
 };
+
+const imageUploaderStyles = StyleSheet.create({
+  container: {
+    elevation: 2,
+    height: 150,
+    width: 150,
+    backgroundColor: '#efefef',
+    position: 'relative',
+    borderRadius: 0,
+    overflow: 'hidden',
+    margin:8
+  },
+  uploadBtnContainer: {
+    opacity: 0.7,
+    position: 'absolute',
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'lightgrey',
+    width: '100%',
+    height: '25%',
+  },
+  uploadBtn: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
 
 HireNowScreen.navigationOptions = {
   title: 'HireNow',
