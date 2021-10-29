@@ -179,6 +179,9 @@ const GET_ME_USER_BY_ID_SR_DETAILS = gql`
       time
       payMethod
       task
+      image1
+      image2
+      image3
       min_price
       max_price
       state
@@ -722,6 +725,37 @@ const RequestScreen = ({ navigation, route }) => {
               ) : (
                 <></>
               )}
+              <HStack>
+              {serviceReqDetails.image1 ? (
+                <>
+                  <View style={imageUploaderStyles.container}>
+                    {serviceReqDetails.image1 && (
+                      <Image
+                        source={{ uri: serviceReqDetails.image1 }}
+                        style={{ width: 150, height: 150 }}
+                      />
+                    )}
+                  </View>
+                </>
+              ) : (
+                <></>
+              )}
+
+              {serviceReqDetails.image2 ? (
+                <>
+                  <View style={imageUploaderStyles.container}>
+                    {serviceReqDetails.image2 && (
+                      <Image
+                        source={{ uri: serviceReqDetails.image2 }}
+                        style={{ width: 150, height: 150 }}
+                      />
+                    )}
+                  </View>
+                </>
+              ) : (
+                <></>
+              )}
+              </HStack>
 
               <TableView
                 appearance="light"
@@ -828,7 +862,6 @@ const RequestScreen = ({ navigation, route }) => {
                   >
                     <Text style={{ color: 'white' }}>Add Review</Text>
                   </TouchableOpacity>
-               
                 </>
               ) : (
                 <></>
@@ -1388,6 +1421,18 @@ const styles = StyleSheet.create({
   },
 });
 
+const imageUploaderStyles = StyleSheet.create({
+  container: {
+    elevation: 2,
+    height: 150,
+    width: 150,
+    backgroundColor: '#efefef',
+    position: 'relative',
+    borderRadius: 0,
+    overflow: 'hidden',
+    margin: 12,
+  },
+});
 RequestScreen.navigationOptions = {
   title: 'Request',
 };
