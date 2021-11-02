@@ -54,7 +54,7 @@ const TabNavigator = createBottomTabNavigator({
         navigationOptions: {
             tabBarLabel: 'ServiceProviders',
             tabBarIcon: ({ tintColor }) => (
-                <MaterialCommunityIcons name="settings" size={24} color={tintColor} />
+                <MaterialCommunityIcons name="tools" size={24} color={tintColor} />
             )
         }
     },
