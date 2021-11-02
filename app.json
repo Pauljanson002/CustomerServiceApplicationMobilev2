@@ -7,6 +7,14 @@
     "version": "1.0.0",
     "platforms": ["ios", "android"],
     "orientation": "portrait",
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos."
+        }
+      ]
+    ],
     "splash": {
       "resizeMode": "cover",
       "backgroundColor": "#4A90E2"
