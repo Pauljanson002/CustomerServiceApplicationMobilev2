@@ -54,23 +54,7 @@ const REJECT_SR = gql`
   }
 `;
 
-const COMPLETE_SR = gql`
-  mutation CompleteServiceRequestMutation(
-    $completeServiceRequestId: ID
-    $completeServiceRequestFinalAmount: Int
-  ) {
-    completeServiceRequest(
-      id: $completeServiceRequestId
-      finalAmount: $completeServiceRequestFinalAmount
-    ) {
-      requester_id
-      provider_id
-      id
-      task
-      state
-    }
-  }
-`;
+
 
 const START_SR = gql`
   mutation StartServiceRequestMutation($startServiceRequestId: ID) {
@@ -173,6 +157,7 @@ const CUSTOMER_FEEDBACK_SR = gql`
 const GET_ME_USER_BY_ID_SR_DETAILS = gql`
   query GetServiceRequestDetails($getServiceRequestByIdId: ID!) {
     getServiceRequestByID(id: $getServiceRequestByIdId) {
+      id
       requester_id
       provider_id
       date
@@ -181,7 +166,6 @@ const GET_ME_USER_BY_ID_SR_DETAILS = gql`
       task
       image1
       image2
-      image3
       min_price
       max_price
       state
@@ -189,13 +173,17 @@ const GET_ME_USER_BY_ID_SR_DETAILS = gql`
       location
       requestReview
       requestRating
-      toDatePayment
+      finalAmount
       customerReview
       customerRating
+      hasPaid
     }
     me {
       id
+      fullname  
       username
+      contactNum
+      address  
       email
       city
     }
@@ -209,6 +197,15 @@ const GET_USER_BY_ID = gql`
       address
     }
   }
+`;
+const CONFIRM_CASH_PAYMENT= gql`
+
+mutation ConfirmCashPaymentMutation($confirmCashPaymentId: ID) {
+  confirmCashPayment(id: $confirmCashPaymentId) {
+    id
+    hasPaid
+  }
+}
 `;
 const RequestScreen = ({ navigation, route }) => {
   const toast = useToast();
@@ -288,6 +285,24 @@ const RequestScreen = ({ navigation, route }) => {
     }
   );
 
+  const [confirmCashPayment, { loading_pay, error_pay }] = useMutation(
+    CONFIRM_CASH_PAYMENT,
+    {
+      onCompleted: data => {
+        addToast('Paid', {
+          appearance: 'success'
+        });
+        setView({
+          renderView: 0
+        });
+        history.push(`/service_request/${id}`);
+      },
+      onError: error => {
+        addToast('Failed ', { appearance: 'error' });
+      }
+    }
+  );
+
   const [rescheduleServiceRequest, { loading_reschedule, error_reschedule }] =
     useMutation(RESCHEDULE_SR, {
       onCompleted: (data) => {
@@ -318,26 +333,13 @@ const RequestScreen = ({ navigation, route }) => {
     }
   );
 
-  const [completeServiceRequest, { loading_complete, error_complete }] =
-    useMutation(COMPLETE_SR, {
-      onCompleted: (data) => {
-        toast.show('Successfully completed the request', {
-          type: 'success',
-          animationType: 'slide-in',
-        });
-      },
-      onError: (error) => {
-        console.log(error);
-        toast.show('Failed ', { type: 'danger', animationType: 'slide-in' });
-      },
-    });
+
 
   if (networkStatus === NetworkStatus.refetch) return <Text>Refetching!</Text>;
   if (
     loading ||
     loading_cancel ||
     loading_start ||
-    loading_complete ||
     loading_edit ||
     loading_reschedule
   )
@@ -378,7 +380,7 @@ const RequestScreen = ({ navigation, route }) => {
 
   const dayName = days[date.getDay()];
   console.log(date.getDay());
-  showDay = `${serviceReqDetails.date}, ${dayName}`;
+  var showDay = `${serviceReqDetails.date}, ${dayName}`;
   const myDetails = data_serviceRequest.me;
 
   const handleChange = (event) => {
@@ -418,23 +420,14 @@ const RequestScreen = ({ navigation, route }) => {
     refetch();
   };
 
-  const completeRequest = (event) => {
-    setValues({});
-    completeServiceRequest({
-      variables: {
-        completeServiceRequestId: id,
-      },
-    });
-    refetch();
-  };
 
-  const acceptRequest = (event) => {
+
+  const requestCashPayment = event => {
     setValues({});
-    acceptServiceRequest({
+    confirmCashPayment({
       variables: {
-        acceptServiceRequestId: id,
-        acceptServiceRequestEstimate: values.acceptServiceRequestEstimate,
-      },
+        confirmCashPaymentId: id
+      }
     });
     refetch();
   };
@@ -677,8 +670,15 @@ const RequestScreen = ({ navigation, route }) => {
                       >
                         Reject
                       </Button>
-                      <Button
-                        onPress={completeRequest}
+                      
+                      
+                    </ScrollView>
+                  </HStack>
+                  <HStack>
+                  <Button
+                        onPress={() => {
+                          navigation.navigate('Complete', { id: id });
+                        }}
                         isDisabled={serviceReqDetails.state !== 'Started'}
                         style={{
                           backgroundColor: '#059669',
@@ -692,9 +692,16 @@ const RequestScreen = ({ navigation, route }) => {
                           padding: 8,
                         }}
                       >
-                        Mark Completed
+                        Complete
                       </Button>
-                    </ScrollView>
+                      <Button
+                        onPress={requestCashPayment}
+                        style={styles.buttons}
+                        isDisabled={serviceReqDetails.hasPaid}
+                      >
+                        Cash Paid
+                      </Button>
+
                   </HStack>
                 </>
               )}
@@ -823,11 +830,20 @@ const RequestScreen = ({ navigation, route }) => {
                   />
                   <Cell
                     cellStyle="RightDetail"
-                    title="Total Amount Paid to date"
+                    title="Final Amount at completion"
                     detail={
-                      serviceReqDetails.toDatePayment
-                        ? `${serviceReqDetails.toDatePayment} LKR`
-                        : 'No Payments Yet'
+                      serviceReqDetails.finalAmount
+                        ? `${serviceReqDetails.finalAmount} LKR`
+                        : 'Not Available Yet'
+                    }
+                  />
+                  <Cell
+                    cellStyle="RightDetail"
+                    title="Payment Status"
+                    detail={
+                      serviceReqDetails.hasPaid
+                        ? `Paid`
+                        : 'Not Paid Yet'
                     }
                   />
                   <Cell
@@ -1074,8 +1090,14 @@ const RequestScreen = ({ navigation, route }) => {
                       >
                         Reject
                       </Button>
-                      <Button
-                        onPress={completeRequest}
+                    
+                    </ScrollView>
+                  </HStack>
+                  <HStack>
+                  <Button
+                        onPress={() => {
+                          navigation.navigate('Complete', { id: id });
+                        }}
                         isDisabled={serviceReqDetails.state !== 'Started'}
                         style={{
                           backgroundColor: '#059669',
@@ -1089,9 +1111,16 @@ const RequestScreen = ({ navigation, route }) => {
                           padding: 8,
                         }}
                       >
-                        Mark Completed
+                        Complete
                       </Button>
-                    </ScrollView>
+                      <Button
+                        onPress={requestCashPayment}
+                        style={styles.buttons}
+                        isDisabled={serviceReqDetails.hasPaid}
+                      >
+                        Cash Paid
+                      </Button>
+
                   </HStack>
                 </>
               )}
@@ -1328,8 +1357,14 @@ const RequestScreen = ({ navigation, route }) => {
                       >
                         Reject
                       </Button>
-                      <Button
-                        onPress={completeRequest}
+                     
+                    </ScrollView>
+                  </HStack>
+                  <HStack>
+                  <Button
+                        onPress={() => {
+                          navigation.navigate('Complete', { id: id });
+                        }}
                         isDisabled={serviceReqDetails.state !== 'Started'}
                         style={{
                           backgroundColor: '#059669',
@@ -1343,10 +1378,18 @@ const RequestScreen = ({ navigation, route }) => {
                           padding: 8,
                         }}
                       >
-                        Mark Completed
+                        Complete
                       </Button>
-                    </ScrollView>
+                      <Button
+                        onPress={requestCashPayment}
+                        style={styles.buttons}
+                        isDisabled={serviceReqDetails.hasPaid}
+                      >
+                        Cash Paid
+                      </Button>
+
                   </HStack>
+
                 </>
               )}
               <ScrollView
@@ -1406,7 +1449,7 @@ const styles = StyleSheet.create({
   },
   buttons: {
     height: 40,
-    width: '25%',
+    width: '32%',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#06b6d4',
