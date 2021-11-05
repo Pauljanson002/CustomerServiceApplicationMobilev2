@@ -79,7 +79,16 @@ const RequestersScreen = ({ navigation }) => {
                 paddingHorizontal: 12,
                 paddingVertical: 6,
                 borderRadius: 8,
-                backgroundColor: 'lightskyblue',
+                backgroundColor: 'white',
+                shadowColor: '#a5b4fc',
+                shadowOffset: {
+                  width: 0,
+                  height: 10,
+                },
+                shadowOpacity: 0.58,
+                shadowRadius: 12.0,
+            
+                elevation: 2,
                 alignSelf: 'flex-start',
                 marginHorizontal: '1%',
                 marginBottom: 6,
