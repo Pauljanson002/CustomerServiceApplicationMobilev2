@@ -72,10 +72,10 @@ const MyProfileScreen = (props) => {
             <Text>{meQuery.data.me.bio}</Text>
           </HStack>
           <TouchableOpacity
-           
+
             style={{
               height: 40,
-              
+
               justifyContent: 'center',
               alignItems: 'center',
               backgroundColor: 'mediumseagreen',
@@ -84,16 +84,16 @@ const MyProfileScreen = (props) => {
             }}
             onPress={() => {
               props.navigation.navigate('RequesterStatus');
-              
+
             }}
           >
             <Text style={{ color: 'white' }}>Status of My Requests</Text>
           </TouchableOpacity>
           <TouchableOpacity
-           
+
            style={{
              height: 40,
-             
+
              justifyContent: 'center',
              alignItems: 'center',
              backgroundColor: 'mediumturquoise',
@@ -102,7 +102,7 @@ const MyProfileScreen = (props) => {
            }}
            onPress={() => {
              props.navigation.navigate('ProviderStatus');
-             
+
            }}
          >
            
