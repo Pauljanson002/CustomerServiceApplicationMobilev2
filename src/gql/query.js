@@ -269,7 +269,89 @@ query Query {
 }
 `;
 
+const GET_ME_AS_SERVICE_PROVIDER = gql`
+    query Query {
+        me {
+            username
+            email
+            nic
+            profession
+            province
+            city
+            town
+            bio
+            service_providing_status
+            profile_state
+            roles
+        }
+    }
+`;
+
+const GET_JOB_POSTING_FEED = gql`
+  query Query(
+    $jobPostingFeedProvince: String!
+    $jobPostingFeedCity: String!
+    $jobPostingFeedTown: String!
+    $jobPostingFeedCategory: String!
+    $jobPostingFeedCursor: String
+  ) {
+    jobPostingFeed(
+      province: $jobPostingFeedProvince
+      city: $jobPostingFeedCity
+      town: $jobPostingFeedTown
+      category: $jobPostingFeedCategory
+      cursor: $jobPostingFeedCursor
+    ) {
+      jobPostings {
+        id
+        postedBy {
+          username
+        }
+        heading
+        description
+        budgetRange {
+          lowerLimit
+          upperLimit
+        }
+        location {
+          city
+          town
+        }
+      }
+      cursor
+      hasNextPage
+    }
+  }
+`;
+
+const GET_JOB_POSTING = gql`
+    query Query($jobPostingId: ID!) {
+        jobPosting(id: $jobPostingId) {
+            id
+            heading
+            location {
+                province
+                city
+                town
+            }
+            category
+            skills
+            postedBy {
+                id
+                username
+                email
+                nic
+            }
+            description
+            budgetRange {
+                lowerLimit
+                upperLimit
+            }
+        }
+    }
+`;
+
 
 export {GET_ME,GET_ALL_SERVICE_PROVIDERS,
-    GET_ALL_SERVICE_TYPES,
+    GET_ALL_SERVICE_TYPES,GET_ME_AS_SERVICE_PROVIDER,GET_JOB_POSTING_FEED,GET_JOB_POSTING
     }

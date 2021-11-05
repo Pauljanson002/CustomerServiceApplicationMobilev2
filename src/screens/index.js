@@ -7,7 +7,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import {exp} from "react-native-reanimated";
 import MyProfileScreen from "./my_profile_screen";
-import ProvidersScreen from "./providers_screen";
+import FindJobScreen from "./service_provider/FindJobScreen";
 import RequestersScreen from "./requesters_screen";
 import ProvidersByProfession from "./providersByProfession"
 import AuthLoading from "./auth_loading";
@@ -22,9 +22,13 @@ import Request from './request_screen';
 import Accept from './accept_screen';
 import ProviderReview from './provider_review_screen';
 import RequesterReview from './requester_review_screen';
+import ServiceProviderAuth from "./service_provider/service_provider_auth";
+import ServiceProviderReject from "./service_provider/service_provider_reject";
+import JobPostingScreen from "./service_provider/JobPostingScreen";
 
 const ProviderStack = createStackNavigator({
-    Providers:ProvidersScreen
+    FindJob:FindJobScreen,
+    JobPosting:JobPostingScreen
 });
 
 const MyStack = createStackNavigator({
@@ -49,6 +53,16 @@ const RequesterStack = createStackNavigator({
 
 
 
+const ServiceProviderSwitchNavigator = createSwitchNavigator(
+    {
+        ServiceProviderAuth:ServiceProviderAuth,
+        ServiceProviderReject:ServiceProviderReject,
+        ServiceProviderStack:ProviderStack
+    },{
+        initialRouteName:"ServiceProviderAuth"
+    }
+)
+
 const TabNavigator = createBottomTabNavigator({
 
     MyNoteScreen: {
@@ -60,10 +74,10 @@ const TabNavigator = createBottomTabNavigator({
             )
         }
     },
-    Settings: {
-        screen: ProviderStack,
+    Provider: {
+        screen: ServiceProviderSwitchNavigator,
         navigationOptions: {
-            tabBarLabel: 'ServiceProviders',
+            tabBarLabel: 'Find Job',
             tabBarIcon: ({ tintColor }) => (
                 <MaterialCommunityIcons name="tools" size={24} color={tintColor} />
             )
