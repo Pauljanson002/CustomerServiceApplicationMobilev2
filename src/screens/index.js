@@ -20,6 +20,7 @@ import RequesterStatus from './requester_status_screen';
 import ProviderStatus from './provider_status_screen';
 import Request from './request_screen';
 import Accept from './accept_screen';
+import Complete from './complete_screen';
 import ProviderReview from './provider_review_screen';
 import RequesterReview from './requester_review_screen';
 import ServiceProviderAuth from "./service_provider/service_provider_auth";
@@ -37,6 +38,7 @@ const MyStack = createStackNavigator({
     RequesterStatus:RequesterStatus,
     Request:Request,
     Accept:Accept,
+    Complete:Complete,
     ProviderReview:ProviderReview,
     RequesterReview:RequesterReview,
     

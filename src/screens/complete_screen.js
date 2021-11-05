@@ -25,24 +25,25 @@ import { useMutation, useQuery, gql } from '@apollo/client';
 import { Rating } from 'react-native-ratings';
 import { Linking } from 'react-native';
 
-const ACCEPT_SR = gql`
-  mutation AcceptServiceRequestMutation(
-    $acceptServiceRequestId: ID
-    $acceptServiceRequestEstimate: String
+const COMPLETE_SR = gql`
+  mutation CompleteServiceRequestMutation(
+    $completeServiceRequestId: ID
+    $completeServiceRequestFinalAmount: String
   ) {
-    acceptServiceRequest(
-      id: $acceptServiceRequestId
-      estimate: $acceptServiceRequestEstimate
+    completeServiceRequest(
+      id: $completeServiceRequestId
+      finalAmount: $completeServiceRequestFinalAmount
     ) {
-      date
-      time
+      requester_id
+      provider_id
+      id
+      task
       state
-      estimate
     }
   }
 `;
 
-const AcceptScreen = ({ navigation, route }) => {
+const CompleteScreen = ({ navigation, route }) => {
     const id = navigation.getParam('id');
     const toast = useToast();
     const [formData, setData] = React.useState({});
@@ -55,44 +56,43 @@ const AcceptScreen = ({ navigation, route }) => {
 
       const onRefresh = React.useCallback(() => {
         setRefreshing(true);
-        refetch();
+       
         wait(2000).then(() => setRefreshing(false));
       }, []);
 
-      const [acceptServiceRequest, { loading_accept, error_accept }] = useMutation(
-        ACCEPT_SR,
-        {
-          onCompleted: (data) => {
-            toast.show('Successfully accepted the request', {
-              type: 'success',
-              animationType: 'slide-in',
-            });
-            navigation.navigate('Request', { id: id });
-                
-              
-          },
-          onError: (error) => {
-            console.log(error);
-            toast.show('Failed ', { type: 'danger', animationType: 'slide-in' });
-          },
-        }
-      );
+      const [completeServiceRequest, { loading_complete, error_complete }] =
+      useMutation(COMPLETE_SR, {
+        onCompleted: (data) => {
+          toast.show('Successfully completed the request', {
+            type: 'success',
+            animationType: 'slide-in',
+          });
+          navigation.navigate('Request', { id: id });
+        },
+        onError: (error) => {
+          console.log(error);
+          toast.show('Failed ', { type: 'danger', animationType: 'slide-in' });
+        },
+      });
 
       
 
-      if (loading_accept)
+      if (loading_complete)
       return <Text>Loading..</Text>;
 
-      const acceptRequest = (event) => {
-        setValues({});
-        acceptServiceRequest({
-          variables: {
-            acceptServiceRequestId: id,
-            acceptServiceRequestEstimate: estimate,
-          },
-        });
+      
+        const completeRequest = (event) => {
+            setValues({});
+            completeServiceRequest({
+              variables: {
+                completeServiceRequestId: id,
+                completeServiceRequestFinalAmount:estimate
+              },
+            });
+           
+          };
      
-      };
+     
 
       return(
         <ScrollView style={{ backgroundColor: 'white', width:'98%',borderWidth:1, borderColor:'#0369a1' }}>
@@ -107,16 +107,16 @@ const AcceptScreen = ({ navigation, route }) => {
             marginLeft:12
           }}
         >
-          Accept Request
+          Mark the Request Completed
         </Text>
         <VStack width="90%" mx="3">
         <FormControl isRequired >
   <FormControl.Label _text={{ bold: true }} style={{marginTop:10}}>
-    Request charges estimate
+    Enter final amount charged from customer
   </FormControl.Label>
   <TextArea
-    placeholder="Enter cost estimate"
-    name={'acceptServiceRequestEstimate'}
+    placeholder="Enter amount Eg: 7000"
+    name={'completeServiceRequestFinalAmount'}
     onChangeText={(value) => {
       setData({ ...formData, max: value });
       setEstimate(value);
@@ -127,15 +127,15 @@ const AcceptScreen = ({ navigation, route }) => {
          
 
           
-          <Button2 onPress={acceptRequest} mt="5" colorScheme="cyan">
-            Accept Request
+          <Button2 onPress={completeRequest} mt="5" colorScheme="cyan">
+            Complete Request
           </Button2>
         </VStack>
         </ScrollView>
       );
-}
+    };
 
-AcceptScreen.navigationOptions = {
-    title: 'Accept',
+CompleteScreen.navigationOptions = {
+    title: 'Complete',
   };
-  export default AcceptScreen;
+  export default CompleteScreen;
