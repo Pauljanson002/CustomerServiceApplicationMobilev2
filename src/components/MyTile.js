@@ -1,8 +1,8 @@
 import React from "react";
-import {Box, Center, Heading, HStack, Stack, Text, VStack} from "native-base";
+import {Box, Button, Center, Heading, HStack, Stack, Text, VStack} from "native-base";
 import {TouchableOpacity} from "react-native";
 
-const MyTile = ({id,heading,subheading,center,footer}) =>{
+const MyTile = ({id,heading,subheading,center,footer,green_button_fn,green_button_text,red_button_fn,red_button_text}) =>{
    return(
        <Box
            rounded="lg"
@@ -32,6 +32,10 @@ const MyTile = ({id,heading,subheading,center,footer}) =>{
                <Text fontWeight="400">
                    {center}
                </Text>
+               <HStack alignItems="center" space={4} justifyContent="space-between">
+                   {(green_button_text)&&(<Button colorScheme={"green"} onPress={green_button_fn}>{green_button_text}</Button>)}
+                   {(red_button_text)&& (<Button colorScheme={"red"} onPress={red_button_fn}>{red_button_text}</Button>)}
+               </HStack>
                <HStack alignItems="center" space={4} justifyContent="space-between">
                    <HStack alignItems="center">
                        <Text color="gray.500" fontWeight="400">

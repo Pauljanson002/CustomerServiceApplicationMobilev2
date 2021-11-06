@@ -25,10 +25,10 @@ const FindJobScreen = ({navigation})=>{
     const {data,loading,error,fetchMore} = useQuery(GET_ME_AS_SERVICE_PROVIDER)
     const job_query = useQuery(GET_JOB_POSTING_FEED,{
         variables:{
-            jobPostingFeedProvince:data.me.province,
-            jobPostingFeedCity:data.me.city,
-            jobPostingFeedTown:data.me.town,
-            jobPostingFeedCategory:"Plumbing",
+            jobPostingFeedProvince:"",
+            jobPostingFeedCity:"",
+            jobPostingFeedTown:"",
+            jobPostingFeedCategory:"",
             jobPostingFeedCursor:"",
         },
         fetchPolicy:"cache-and-network",

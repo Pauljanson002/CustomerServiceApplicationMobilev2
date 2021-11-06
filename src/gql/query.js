@@ -350,8 +350,37 @@ const GET_JOB_POSTING = gql`
         }
     }
 `;
-
+const GET_MY_BIDS = gql`
+    query Query($state: String) {
+        getMyBids(state: $state) {
+            id
+            proposedAmount
+            proposedDate
+            detailedBreakdown
+            jobPosting {
+                id
+                heading
+                postedBy {
+                    username
+                }
+            }
+            state
+            updatedAt
+        }
+    }
+`;
+const GET_ME_AS_SERVICE_REQUESTER = gql`
+    query Query {
+        me {
+            username
+            email
+            city
+            address
+            roles
+        }
+    }
+`;
 
 export {GET_ME,GET_ALL_SERVICE_PROVIDERS,
-    GET_ALL_SERVICE_TYPES,GET_ME_AS_SERVICE_PROVIDER,GET_JOB_POSTING_FEED,GET_JOB_POSTING
+    GET_ALL_SERVICE_TYPES,GET_ME_AS_SERVICE_PROVIDER,GET_JOB_POSTING_FEED,GET_JOB_POSTING,GET_MY_BIDS,GET_ME_AS_SERVICE_REQUESTER
     }

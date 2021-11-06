@@ -23,4 +23,39 @@ const ADD_JOB_BID = gql`
         }
     }
 `;
-export  {SIGNIN_USER,ADD_JOB_BID}
+const ADD_JOB_POSTING = gql`
+    mutation Mutation(
+        $createJobPostingHeading: String!
+        $createJobPostingProvince: String!
+        $createJobPostingCity: String!
+        $createJobPostingTown: String!
+        $createJobPostingCategory: String!
+        $createJobPostingDescription: String!
+        $createJobPostingLowerLimit: Float!
+        $createJobPostingUpperLimit: Float!
+    ) {
+        createJobPosting(
+            heading: $createJobPostingHeading
+            province: $createJobPostingProvince
+            city: $createJobPostingCity
+            town: $createJobPostingTown
+            category: $createJobPostingCategory
+            description: $createJobPostingDescription
+            lowerLimit: $createJobPostingLowerLimit
+            upperLimit: $createJobPostingUpperLimit
+        ) {
+            id
+            heading
+            description
+        }
+    }
+`;
+const CHANGE_JOB_BID_STATE = gql`
+    mutation ChangeStateJobBidMutation($jobBidId: ID!, $jobBidState: String!) {
+        changeStateJobBid(jobBidId: $jobBidId, jobBidState: $jobBidState) {
+            id
+            state
+        }
+    }
+`;
+export  {SIGNIN_USER,ADD_JOB_BID,CHANGE_JOB_BID_STATE,ADD_JOB_POSTING}

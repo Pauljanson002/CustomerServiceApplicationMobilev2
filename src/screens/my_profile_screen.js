@@ -108,6 +108,7 @@ const MyProfileScreen = (props) => {
            
            <Text style={{ color: 'white' }}>Status of the requests for me</Text>
          </TouchableOpacity>
+          <Button onPress={(event)=>{props.navigation.navigate("MyBids")}}>My Bids</Button>
           <Button onPress={signOut}>Sign Out</Button>
         </Stack>
       </Center>

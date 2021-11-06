@@ -26,10 +26,13 @@ import RequesterReview from './requester_review_screen';
 import ServiceProviderAuth from "./service_provider/service_provider_auth";
 import ServiceProviderReject from "./service_provider/service_provider_reject";
 import JobPostingScreen from "./service_provider/JobPostingScreen";
+import MyBidsPage from "./service_provider/MyBids";
+import CreateJobScreen from "./service_provider/CreateJob";
 
 const ProviderStack = createStackNavigator({
     FindJob:FindJobScreen,
-    JobPosting:JobPostingScreen
+    JobPosting:JobPostingScreen,
+    MyBids:MyBidsPage
 });
 
 const MyStack = createStackNavigator({
@@ -53,7 +56,9 @@ const RequesterStack = createStackNavigator({
 
 });
 
-
+const CreateJobStack = createStackNavigator({
+    CreateJob:CreateJobScreen
+})
 
 const ServiceProviderSwitchNavigator = createSwitchNavigator(
     {
@@ -83,6 +88,15 @@ const TabNavigator = createBottomTabNavigator({
             tabBarIcon: ({ tintColor }) => (
                 <MaterialCommunityIcons name="tools" size={24} color={tintColor} />
             )
+        }
+    },
+    CreateJob:{
+        screen:CreateJobStack,
+        navigationOptions:{
+            tabBarLabel:"Create Job",
+            tabBarIcon:({tintColor})=>{
+                return <MaterialCommunityIcons name="tools" size={24} color={tintColor} />
+            }
         }
     },
     Requesting: {

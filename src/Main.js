@@ -15,6 +15,7 @@ import Screens from "./screens"
 import getEnvVars from '../config';
 const { API_URI } = getEnvVars();
 const uri = API_URI;
+
 const cache = new InMemoryCache();
 const httpLink = createHttpLink({ uri });
 const authLink = setContext(async (_, { headers }) => {
