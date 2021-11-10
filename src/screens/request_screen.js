@@ -11,6 +11,8 @@ import {
   View,
   RefreshControl,
   TouchableOpacity,
+  Modal,
+  Pressable
 } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { Cell, Section, TableView } from 'react-native-tableview-simple';
@@ -221,6 +223,7 @@ const RequestScreen = ({ navigation, route }) => {
   const [rating, setRating] = React.useState();
   const [task, setTask] = React.useState();
   const [view, setView] = React.useState({ renderView: 0 });
+  const [modalVisible, setModalVisible] = React.useState(false);
 
   const now = new Date();
   now.setMinutes(now.getMinutes() + 25);
@@ -522,6 +525,27 @@ const RequestScreen = ({ navigation, route }) => {
                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
               }
             >
+               <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                  Alert.alert("Modal has been closed.");
+                  setModalVisible(!modalVisible);
+                }}
+              >
+                <View style={styles.centeredView}>
+                  <View style={styles.modalView}>
+                    <Text style={styles.modalText}>Sorry! Online payments are not supported in the app. Complete payment using GetitDone website</Text>
+                    <Pressable
+                      style={[styles.button, styles.buttonClose]}
+                      onPress={() => setModalVisible(!modalVisible)}
+                    >
+                      <Text style={styles.textStyle}>OK</Text>
+                    </Pressable>
+                  </View>
+                </View>
+              </Modal>
               {myDetails.id === requester_id ? (
                 <>
                   <HStack>
@@ -607,6 +631,7 @@ const RequestScreen = ({ navigation, route }) => {
                           margin: 4,
                           padding: 8,
                         }}
+                        onPress={() => setModalVisible(true)}
                       >
                         Make Payment
                       </Button>
@@ -1031,6 +1056,7 @@ const RequestScreen = ({ navigation, route }) => {
                       >
                         Cancel
                       </Button>
+                     
                       <Button
                         isDisabled={
                           serviceReqDetails.state === 'Pending' ||
@@ -1048,6 +1074,7 @@ const RequestScreen = ({ navigation, route }) => {
                           margin: 4,
                           padding: 8,
                         }}
+                        onPress={() => setModalVisible(true)}
                       >
                         Make Payment
                       </Button>
@@ -1321,6 +1348,7 @@ const RequestScreen = ({ navigation, route }) => {
                           margin: 4,
                           padding: 8,
                         }}
+                        onPress={() => setModalVisible(true)}
                       >
                         Make Payment
                       </Button>
@@ -1486,6 +1514,47 @@ const styles = StyleSheet.create({
     height: '20%',
     color: 'blue',
   },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center"
+  }
 });
 
 const imageUploaderStyles = StyleSheet.create({
