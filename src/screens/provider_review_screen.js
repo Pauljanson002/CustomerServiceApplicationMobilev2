@@ -117,6 +117,15 @@ const ProviderReviewScreen = ({ navigation, route }) => {
           <FormControl.Label _text={{ bold: true }} style={{ marginTop: 10 }}>
             How was your experience with the customer
           </FormControl.Label>
+          <Rating
+                    type="heart"
+                    ratingCount={5}
+                    imageSize={40}
+                    showRating
+                    startingValue={0}
+                    onFinishRating={ratingChanged}
+                    ratingBackgroundColor="#c8c7c8"
+                  />
           <TextArea
             
             name={'customerfeedbackServiceRequestCustomerRating'}

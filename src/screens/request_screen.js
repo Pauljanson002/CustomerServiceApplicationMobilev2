@@ -54,8 +54,6 @@ const REJECT_SR = gql`
   }
 `;
 
-
-
 const START_SR = gql`
   mutation StartServiceRequestMutation($startServiceRequestId: ID) {
     startServiceRequest(id: $startServiceRequestId) {
@@ -180,10 +178,10 @@ const GET_ME_USER_BY_ID_SR_DETAILS = gql`
     }
     me {
       id
-      fullname  
+      fullname
       username
       contactNum
-      address  
+      address
       email
       city
     }
@@ -198,14 +196,13 @@ const GET_USER_BY_ID = gql`
     }
   }
 `;
-const CONFIRM_CASH_PAYMENT= gql`
-
-mutation ConfirmCashPaymentMutation($confirmCashPaymentId: ID) {
-  confirmCashPayment(id: $confirmCashPaymentId) {
-    id
-    hasPaid
+const CONFIRM_CASH_PAYMENT = gql`
+  mutation ConfirmCashPaymentMutation($confirmCashPaymentId: ID) {
+    confirmCashPayment(id: $confirmCashPaymentId) {
+      id
+      hasPaid
+    }
   }
-}
 `;
 const RequestScreen = ({ navigation, route }) => {
   const toast = useToast();
@@ -288,18 +285,18 @@ const RequestScreen = ({ navigation, route }) => {
   const [confirmCashPayment, { loading_pay, error_pay }] = useMutation(
     CONFIRM_CASH_PAYMENT,
     {
-      onCompleted: data => {
+      onCompleted: (data) => {
         addToast('Paid', {
-          appearance: 'success'
+          appearance: 'success',
         });
         setView({
-          renderView: 0
+          renderView: 0,
         });
         history.push(`/service_request/${id}`);
       },
-      onError: error => {
+      onError: (error) => {
         addToast('Failed ', { appearance: 'error' });
-      }
+      },
     }
   );
 
@@ -332,8 +329,6 @@ const RequestScreen = ({ navigation, route }) => {
       },
     }
   );
-
-
 
   if (networkStatus === NetworkStatus.refetch) return <Text>Refetching!</Text>;
   if (
@@ -420,14 +415,12 @@ const RequestScreen = ({ navigation, route }) => {
     refetch();
   };
 
-
-
-  const requestCashPayment = event => {
+  const requestCashPayment = (event) => {
     setValues({});
     confirmCashPayment({
       variables: {
-        confirmCashPaymentId: id
-      }
+        confirmCashPaymentId: id,
+      },
     });
     refetch();
   };
@@ -569,13 +562,16 @@ const RequestScreen = ({ navigation, route }) => {
                       >
                         Edit Task
                       </Button>
-
+                    </ScrollView>
+                  </HStack>
+                  <HStack>
+                   
                       <Button
                         onPress={cancelRequest}
                         style={{
                           backgroundColor: '#f43f5e',
                           height: 40,
-                          width: '20%',
+                          width: '40%',
                           justifyContent: 'center',
                           alignItems: 'center',
 
@@ -603,7 +599,7 @@ const RequestScreen = ({ navigation, route }) => {
                         style={{
                           backgroundColor: '#059669',
                           height: 40,
-                          width: '20%',
+                          width: '40%',
                           justifyContent: 'center',
                           alignItems: 'center',
 
@@ -614,7 +610,7 @@ const RequestScreen = ({ navigation, route }) => {
                       >
                         Make Payment
                       </Button>
-                    </ScrollView>
+                   
                   </HStack>
                 </>
               ) : (
@@ -644,64 +640,68 @@ const RequestScreen = ({ navigation, route }) => {
                       >
                         Start
                       </Button>
-
-                      <Button
-                        onPress={rejectRequest}
-                        style={{
-                          backgroundColor: '#f43f5e',
-                          height: 40,
-                          width: '30%',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-
-                          borderRadius: 8,
-                          margin: 4,
-                          padding: 8,
-                        }}
-                        isDisabled={
-                          serviceReqDetails.date +
-                            'T' +
-                            serviceReqDetails.time <
-                            now.toISOString().substr(0, 16) ||
-                          serviceReqDetails.state === 'Completed' ||
-                          serviceReqDetails.state === 'Started' ||
-                          serviceReqDetails.state === 'Reviewed'
-                        }
-                      >
-                        Reject
-                      </Button>
-                      
-                      
                     </ScrollView>
                   </HStack>
                   <HStack>
-                  <Button
-                        onPress={() => {
-                          navigation.navigate('Complete', { id: id });
-                        }}
-                        isDisabled={serviceReqDetails.state !== 'Started'}
-                        style={{
-                          backgroundColor: '#059669',
-                          height: 40,
-                          width: '30%',
-                          justifyContent: 'center',
-                          alignItems: 'center',
+                    <Button
+                      onPress={rejectRequest}
+                      style={{
+                        backgroundColor: '#f43f5e',
+                        height: 40,
+                        width: '30%',
+                        justifyContent: 'center',
+                        alignItems: 'center',
 
-                          borderRadius: 8,
-                          margin: 4,
-                          padding: 8,
-                        }}
-                      >
-                        Complete
-                      </Button>
-                      <Button
-                        onPress={requestCashPayment}
-                        style={styles.buttons}
-                        isDisabled={serviceReqDetails.hasPaid}
-                      >
-                        Cash Paid
-                      </Button>
+                        borderRadius: 8,
+                        margin: 4,
 
+                        padding: 8,
+                      }}
+                      isDisabled={
+                        serviceReqDetails.date + 'T' + serviceReqDetails.time <
+                          now.toISOString().substr(0, 16) ||
+                        serviceReqDetails.state === 'Completed' ||
+                        serviceReqDetails.state === 'Started' ||
+                        serviceReqDetails.state === 'Reviewed'
+                      }
+                    >
+                      Reject
+                    </Button>
+                    <Button
+                      onPress={() => {
+                        navigation.navigate('Complete', { id: id });
+                      }}
+                      isDisabled={serviceReqDetails.state !== 'Started'}
+                      style={{
+                        backgroundColor: '#059669',
+                        height: 40,
+                        width: '30%',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+
+                        borderRadius: 8,
+                        margin: 4,
+                        padding: 8,
+                      }}
+                    >
+                      Complete
+                    </Button>
+                    <Button
+                      onPress={requestCashPayment}
+                      isDisabled={serviceReqDetails.hasPaid}
+                      style={{
+                        backgroundColor: '#06b6d4',
+                        height: 40,
+                        width: '28%',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        padding: 8,
+                        borderRadius: 8,
+                        margin: 4,
+                      }}
+                    >
+                      Cash Paid
+                    </Button>
                   </HStack>
                 </>
               )}
@@ -733,35 +733,35 @@ const RequestScreen = ({ navigation, route }) => {
                 <></>
               )}
               <HStack>
-              {serviceReqDetails.image1 ? (
-                <>
-                  <View style={imageUploaderStyles.container}>
-                    {serviceReqDetails.image1 && (
-                      <Image
-                        source={{ uri: serviceReqDetails.image1 }}
-                        style={{ width: 150, height: 150 }}
-                      />
-                    )}
-                  </View>
-                </>
-              ) : (
-                <></>
-              )}
+                {serviceReqDetails.image1 ? (
+                  <>
+                    <View style={imageUploaderStyles.container}>
+                      {serviceReqDetails.image1 && (
+                        <Image
+                          source={{ uri: serviceReqDetails.image1 }}
+                          style={{ width: 150, height: 150 }}
+                        />
+                      )}
+                    </View>
+                  </>
+                ) : (
+                  <></>
+                )}
 
-              {serviceReqDetails.image2 ? (
-                <>
-                  <View style={imageUploaderStyles.container}>
-                    {serviceReqDetails.image2 && (
-                      <Image
-                        source={{ uri: serviceReqDetails.image2 }}
-                        style={{ width: 150, height: 150 }}
-                      />
-                    )}
-                  </View>
-                </>
-              ) : (
-                <></>
-              )}
+                {serviceReqDetails.image2 ? (
+                  <>
+                    <View style={imageUploaderStyles.container}>
+                      {serviceReqDetails.image2 && (
+                        <Image
+                          source={{ uri: serviceReqDetails.image2 }}
+                          style={{ width: 150, height: 150 }}
+                        />
+                      )}
+                    </View>
+                  </>
+                ) : (
+                  <></>
+                )}
               </HStack>
 
               <TableView
@@ -774,16 +774,20 @@ const RequestScreen = ({ navigation, route }) => {
                   footer="Rescheduling, canceling and rejecting a service request is allowed only 20 minuites before the scheduled time. After the aceptance of a request it cannot be edited"
                 >
                   <Cell
+                    onPress={() => {navigation.navigate('ViewProfile', { id: serviceReqDetails.provider_id }); console.log("pressed");}}
                     cellStyle="RightDetail"
-                    title="Selected Provider Profile"
-                    detail=""
-                    accessory="DisclosureIndicator"
+                    title="Selected Provider"
+                    detail="Visit"
+                    accessory="DetailDisclosure"
+                    
                   />
                   <Cell
+                    onPress={() => {navigation.navigate('ViewProfile', { id: serviceReqDetails.requester_id }); console.log("pressed");}}
                     cellStyle="RightDetail"
                     title="Service Requester"
-                    detail=""
-                    accessory="DisclosureIndicator"
+                    detail="Visit"
+                    accessory="DetailDisclosure"
+                  
                   ></Cell>
 
                   <Cell
@@ -839,12 +843,16 @@ const RequestScreen = ({ navigation, route }) => {
                   />
                   <Cell
                     cellStyle="RightDetail"
-                    title="Payment Status"
+                    title="Payment Method"
                     detail={
-                      serviceReqDetails.hasPaid
-                        ? `Paid`
-                        : 'Not Paid Yet'
+                      serviceReqDetails.payMethod === '0' ? `Card` : 'Cash'
                     }
+                  />
+
+                  <Cell
+                    cellStyle="RightDetail"
+                    title="Payment Status"
+                    detail={serviceReqDetails.hasPaid ? `Paid` : 'Not Paid Yet'}
                   />
                   <Cell
                     cellStyle="RightDetail"
@@ -1090,37 +1098,44 @@ const RequestScreen = ({ navigation, route }) => {
                       >
                         Reject
                       </Button>
-                    
                     </ScrollView>
                   </HStack>
                   <HStack>
-                  <Button
-                        onPress={() => {
-                          navigation.navigate('Complete', { id: id });
-                        }}
-                        isDisabled={serviceReqDetails.state !== 'Started'}
-                        style={{
-                          backgroundColor: '#059669',
-                          height: 40,
-                          width: '20%',
-                          justifyContent: 'center',
-                          alignItems: 'center',
+                    <Button
+                      onPress={() => {
+                        navigation.navigate('Complete', { id: id });
+                      }}
+                      isDisabled={serviceReqDetails.state !== 'Started'}
+                      style={{
+                        backgroundColor: '#059669',
+                        height: 40,
+                        width: '20%',
+                        justifyContent: 'center',
+                        alignItems: 'center',
 
-                          borderRadius: 8,
-                          margin: 4,
-                          padding: 8,
-                        }}
-                      >
-                        Complete
-                      </Button>
-                      <Button
-                        onPress={requestCashPayment}
-                        style={styles.buttons}
-                        isDisabled={serviceReqDetails.hasPaid}
-                      >
-                        Cash Paid
-                      </Button>
-
+                        borderRadius: 8,
+                        margin: 4,
+                        padding: 8,
+                      }}
+                    >
+                      Complete
+                    </Button>
+                    <Button
+                      onPress={requestCashPayment}
+                      isDisabled={serviceReqDetails.hasPaid}
+                      style={{
+                        backgroundColor: '#06b6d4',
+                        height: 40,
+                        width: '28%',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        padding: 8,
+                        borderRadius: 8,
+                        margin: 4,
+                      }}
+                    >
+                      Cash Paid
+                    </Button>
                   </HStack>
                 </>
               )}
@@ -1165,11 +1180,9 @@ const RequestScreen = ({ navigation, route }) => {
                   <Button
                     title={'Select a Date'}
                     onPress={showDatePicker}
-                    style={{backgroundColor:'#f3e8ff'}}
+                    style={{ backgroundColor: '#f3e8ff' }}
                   >
-                    <Text style={{color:'#4c1d95'}}>
-                    Select a Date
-                    </Text>
+                    <Text style={{ color: '#4c1d95' }}>Select a Date</Text>
                   </Button>
                   <DateTimePickerModal
                     isVisible={isDatePickerVisible}
@@ -1200,10 +1213,11 @@ const RequestScreen = ({ navigation, route }) => {
                   <Button
                     title="Select a Time"
                     onPress={showTimePicker}
-                    style={{backgroundColor:'#f3e8ff', height:35}}
-                  > <Text style={{color:'#4c1d95'}}>
-                  Select a Time
-                  </Text></Button>
+                    style={{ backgroundColor: '#f3e8ff', height: 35 }}
+                  >
+                    {' '}
+                    <Text style={{ color: '#4c1d95' }}>Select a Time</Text>
+                  </Button>
                   <DateTimePickerModal
                     isVisible={isTimePickerVisible}
                     mode="time"
@@ -1357,39 +1371,45 @@ const RequestScreen = ({ navigation, route }) => {
                       >
                         Reject
                       </Button>
-                     
                     </ScrollView>
                   </HStack>
                   <HStack>
-                  <Button
-                        onPress={() => {
-                          navigation.navigate('Complete', { id: id });
-                        }}
-                        isDisabled={serviceReqDetails.state !== 'Started'}
-                        style={{
-                          backgroundColor: '#059669',
-                          height: 40,
-                          width: '20%',
-                          justifyContent: 'center',
-                          alignItems: 'center',
+                    <Button
+                      onPress={() => {
+                        navigation.navigate('Complete', { id: id });
+                      }}
+                      isDisabled={serviceReqDetails.state !== 'Started'}
+                      style={{
+                        backgroundColor: '#059669',
+                        height: 40,
+                        width: '20%',
+                        justifyContent: 'center',
+                        alignItems: 'center',
 
-                          borderRadius: 8,
-                          margin: 4,
-                          padding: 8,
-                        }}
-                      >
-                        Complete
-                      </Button>
-                      <Button
-                        onPress={requestCashPayment}
-                        style={styles.buttons}
-                        isDisabled={serviceReqDetails.hasPaid}
-                      >
-                        Cash Paid
-                      </Button>
-
+                        borderRadius: 8,
+                        margin: 4,
+                        padding: 8,
+                      }}
+                    >
+                      Complete
+                    </Button>
+                    <Button
+                      onPress={requestCashPayment}
+                      isDisabled={serviceReqDetails.hasPaid}
+                      style={{
+                        backgroundColor: '#06b6d4',
+                        height: 40,
+                        width: '28%',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        padding: 8,
+                        borderRadius: 8,
+                        margin: 4,
+                      }}
+                    >
+                      Cash Paid
+                    </Button>
                   </HStack>
-
                 </>
               )}
               <ScrollView
@@ -1449,13 +1469,13 @@ const styles = StyleSheet.create({
   },
   buttons: {
     height: 40,
-    width: '32%',
+    width: '41%',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#06b6d4',
     borderRadius: 8,
     margin: 4,
-    padding: 8,
+    padding: 6,
   },
   pickers: {
     justifyContent: 'center',

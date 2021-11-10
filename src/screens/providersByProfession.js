@@ -9,9 +9,10 @@ import {
   TouchableOpacity,
   TextInput
 } from 'react-native';
-import { Select, VStack, CheckIcon, HStack, Checkbox } from 'native-base';
+import { Select, VStack, CheckIcon, HStack, Checkbox, ScrollView ,Box} from 'native-base';
 import { Rating, AirbnbRating } from 'react-native-ratings';
 import { compareDesc } from 'date-fns';
+import { SafeAreaView } from 'react-native-safe-area-context';
 //import { AppLoading } from 'expo';
 //import { useFonts, Inter_200ExtraLight } from '@expo-google-fonts/inter';
 const GET_PROVIDERS_BY_PROFESSION_IN_PROVINCE = gql`
@@ -219,7 +220,8 @@ const ProvidersByProfessionScreen = ({ navigation, route }) => {
               borderWidth: 0.5,
               margin: 4,
             }}
-            onPress={() => navigation.navigate('HireNow', { id: item.id })}
+            onPress={() => {navigation.navigate('ViewProfile', { id: item.id }); }}
+           
           >
             <Text style={{ color: '#525252' }}>View Profile</Text>
           </TouchableOpacity>
@@ -320,11 +322,30 @@ const ProvidersByProfessionScreen = ({ navigation, route }) => {
         <TextInput placeholder="Enter provider name" autoFocus={true} margin={8} borderWidth={1} borderColor={'#0369a1'} borderRadius={7} padding={6} width='96%' onChangeText={providerSearch} value={searchTerm}/>
         </HStack>
 
+
       <FlatList
         data={searchTerm===''?providersResult:providerFilter}
         renderItem={({ item }) => <Item item={item} />}
         keyExtractor={(item) => item.id}
       />
+
+
+
+     
+     
+      <Box
+       
+        height={40}
+        _text={{
+          fontSize: "md",
+          fontWeight: "medium",
+          color: "warmGray.50",
+          letterSpacing: "lg",
+        }}
+      >
+        You Have all Caught Up!
+      </Box>
+
       
     </View>
   );
