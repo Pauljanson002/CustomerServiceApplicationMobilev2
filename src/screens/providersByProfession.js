@@ -7,9 +7,12 @@ import {
   View,
   FlatList,
   TouchableOpacity,
+  TextInput
 } from 'react-native';
-import { Select, VStack, CheckIcon, HStack, Checkbox } from 'native-base';
+import { Select, VStack, CheckIcon, HStack, Checkbox, ScrollView ,Box} from 'native-base';
 import { Rating, AirbnbRating } from 'react-native-ratings';
+import { compareDesc } from 'date-fns';
+import { SafeAreaView } from 'react-native-safe-area-context';
 //import { AppLoading } from 'expo';
 //import { useFonts, Inter_200ExtraLight } from '@expo-google-fonts/inter';
 const GET_PROVIDERS_BY_PROFESSION_IN_PROVINCE = gql`
@@ -67,12 +70,14 @@ const ProvidersByProfessionScreen = ({ navigation, route }) => {
   //const userQuery = useQuery(GET_USERS)
 
   const profession = navigation.getParam('profession');
+  const [searchTerm, setSearchTerm] = useState('');
   const [checked, setChecked] = useState(false);
   const [citychecked, setCityChecked] = useState(false);
   const [values, setValues] = useState({ profession: '' });
   const [city, setCity] = useState('');
   const [province, setProvince] = useState('');
   const [rating, setRating] = useState('');
+  const [providerFilter, setProviderFilter]=useState();
   const { loading, error, data, refetch, networkStatus } = useQuery(
     GET_PROVIDERS_BY_PROFESSION_IN_PROVINCE,
     {
@@ -90,6 +95,7 @@ const ProvidersByProfessionScreen = ({ navigation, route }) => {
   if (loading || meQuery.loading) return <Text>Loading</Text>;
 
   const providersResult = data.searchServiceProviderbyProfessioninProvince;
+ 
   //console.log(meQuery);
 
   const handleChange = (itemValue) => {
@@ -141,6 +147,18 @@ const ProvidersByProfessionScreen = ({ navigation, route }) => {
       });
     }
     refetch();
+  };
+
+  const providerSearch=(text)=>{
+    console.log(searchTerm)
+    setSearchTerm(text);
+    let filteredData=providersResult.filter(function(item){
+      return item.username.toLowerCase().includes(searchTerm.toLowerCase())||item.fullname.toLowerCase().includes(searchTerm.toLowerCase());
+    });
+    if(searchTerm===''){
+      filteredData=providersResult;
+    }
+    setProviderFilter(filteredData);
   };
 
   function Item({ item }) {
@@ -202,7 +220,8 @@ const ProvidersByProfessionScreen = ({ navigation, route }) => {
               borderWidth: 0.5,
               margin: 4,
             }}
-            onPress={() => navigation.navigate('HireNow', { id: item.id })}
+            onPress={() => {navigation.navigate('ViewProfile', { id: item.id }); }}
+           
           >
             <Text style={{ color: '#525252' }}>View Profile</Text>
           </TouchableOpacity>
@@ -222,8 +241,9 @@ const ProvidersByProfessionScreen = ({ navigation, route }) => {
               navigation.navigate('HireNow', { id: item.id });
               console.log(item.id);
             }}
+            disabled={item.id===meQuery.data.me.id||!item.service_providing_status}
           >
-            <Text style={{ color: '#525252' }}>Hire Now</Text>
+            <Text style={{ color: '#525252' }}>{item.id===meQuery.data.me.id||!item.service_providing_status?'Not Available':'Hire Now'}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -298,12 +318,34 @@ const ProvidersByProfessionScreen = ({ navigation, route }) => {
           Show providers only in my City
         </Text>
       </HStack>
+      <HStack>
+        <TextInput placeholder="Enter provider name" autoFocus={true} margin={8} borderWidth={1} borderColor={'#0369a1'} borderRadius={7} padding={6} width='96%' onChangeText={providerSearch} value={searchTerm}/>
+        </HStack>
+
 
       <FlatList
-        data={providersResult}
+        data={searchTerm===''?providersResult:providerFilter}
         renderItem={({ item }) => <Item item={item} />}
         keyExtractor={(item) => item.id}
       />
+
+
+
+     
+     
+      <Box
+       
+        height={40}
+        _text={{
+          fontSize: "md",
+          fontWeight: "medium",
+          color: "warmGray.50",
+          letterSpacing: "lg",
+        }}
+      >
+        You Have all Caught Up!
+      </Box>
+
       
     </View>
   );

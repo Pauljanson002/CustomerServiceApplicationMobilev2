@@ -17,6 +17,7 @@ import { useToast } from 'react-native-toast-notifications';
 import { Icon } from 'react-native-elements';
 import { TabView, SceneMap } from 'react-native-tab-view';
 import { NetworkStatus } from '@apollo/client';
+import { Rating } from 'react-native-ratings';
 import {
   Button as Button2,
   VStack,
@@ -29,7 +30,7 @@ import {
 } from 'native-base';
 import Constants from 'expo-constants';
 import { useMutation, useQuery, gql } from '@apollo/client';
-import { Rating } from 'react-native-ratings';
+
 import { Linking } from 'react-native';
 
 const FEEDBACK_SR = gql`
@@ -112,17 +113,20 @@ const RequesterReviewScreen = ({ navigation, route }) => {
         Review the service provided!
       </Text>
       <VStack width="90%" mx="3">
-        <Rating
-          type="heart"
-          ratingCount={5}
-          imageSize={40}
-          showRating
-          onFinishRating={ratingChanged}
-        />
+        
         <FormControl isRequired>
           <FormControl.Label _text={{ bold: true }} style={{ marginTop: 10 }}>
             How was your experience?
           </FormControl.Label>
+          <Rating
+                    type="heart"
+                    ratingCount={5}
+                    imageSize={40}
+                    showRating
+                    startingValue={0}
+                    onFinishRating={ratingChanged}
+                    ratingBackgroundColor="#c8c7c8"
+                  />
           <TextArea
             name={'feedbackServiceRequestRequestReview'}
             onChangeText={(value) => {
