@@ -58,4 +58,17 @@ const CHANGE_JOB_BID_STATE = gql`
         }
     }
 `;
-export  {SIGNIN_USER,ADD_JOB_BID,CHANGE_JOB_BID_STATE,ADD_JOB_POSTING}
+const ACCEPT_JOB_BID = gql`
+    mutation Mutation(
+        $acceptJobBidJobPostingId: ID!
+        $acceptJobBidJobBidId: ID!
+    ) {
+        acceptJobBid(
+            jobPostingId: $acceptJobBidJobPostingId
+            jobBidId: $acceptJobBidJobBidId
+        ) {
+            id
+        }
+    }
+`;
+export  {SIGNIN_USER,ADD_JOB_BID,CHANGE_JOB_BID_STATE,ADD_JOB_POSTING,ACCEPT_JOB_BID}

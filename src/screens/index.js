@@ -28,6 +28,8 @@ import ServiceProviderReject from "./service_provider/service_provider_reject";
 import JobPostingScreen from "./service_provider/JobPostingScreen";
 import MyBidsPage from "./service_provider/MyBids";
 import CreateJobScreen from "./service_provider/CreateJob";
+import MyJobPostingsScreen from "./service_requester/MyJobPostingsScreen";
+import JobPostingBids from "./service_requester/JobPostingBids";
 
 const ProviderStack = createStackNavigator({
     FindJob:FindJobScreen,
@@ -52,7 +54,9 @@ const RequesterStack = createStackNavigator({
     Requesters: RequestersScreen,
     ProvidersByProfession:ProvidersByProfession,
     HireNow:HireNow,
-    Success:Success
+    Success:Success,
+    MyJobPostings:MyJobPostingsScreen,
+    JobPostingBids:JobPostingBids
 
 });
 

@@ -380,7 +380,48 @@ const GET_ME_AS_SERVICE_REQUESTER = gql`
         }
     }
 `;
+const GET_MY_JOB_POSTINGS = gql`
+    query Query($getMyJobPostingsState: String!) {
+        getMyJobPostings(state: $getMyJobPostingsState) {
+            id
+            heading
+            category
+            budgetRange {
+                lowerLimit
+                upperLimit
+            }
+            updatedAt
+        }
+    }
+`;
+const GET_JOB_POSTING_STATE = gql`
+    query Query($jobPostingId: ID!) {
+        jobPosting(id: $jobPostingId) {
+            id
+            state
+        }
+    }
+`;
+const GET_MY_JOB_POSTING_BIDS = gql`
+    query Query($getMyJobPostingBidsId: ID!) {
+        getMyJobPostingBids(id: $getMyJobPostingBidsId) {
+            id
+            state
+            proposedAmount
+            bidBy {
+                fullname
+                profession
+                provider_rating
+            }
+            detailedBreakdown
+            proposedDate
+            updatedAt
+        }
+    }
+`;
+
 
 export {GET_ME,GET_ALL_SERVICE_PROVIDERS,
-    GET_ALL_SERVICE_TYPES,GET_ME_AS_SERVICE_PROVIDER,GET_JOB_POSTING_FEED,GET_JOB_POSTING,GET_MY_BIDS,GET_ME_AS_SERVICE_REQUESTER
+    GET_ALL_SERVICE_TYPES,GET_ME_AS_SERVICE_PROVIDER,GET_JOB_POSTING_FEED,GET_JOB_POSTING,GET_MY_BIDS,GET_ME_AS_SERVICE_REQUESTER,GET_MY_JOB_POSTINGS,GET_JOB_POSTING_STATE,
+    GET_MY_JOB_POSTING_BIDS
     }

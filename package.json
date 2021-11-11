@@ -11,6 +11,7 @@
     "@apollo/client": "^3.2.7",
     "@expo-google-fonts/inter": "^0.2.0",
     "@jrobins/bulma-native": "^0.0.4",
+    "@payhere/payhere-mobilesdk-reactnative": "1.0.5",
     "@react-native-community/datetimepicker": "3.5.2",
     "@react-native-community/masked-view": "0.1.10",
     "apollo-link-context": "^1.0.20",
